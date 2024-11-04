@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Fonts */
+@font-face {
+  font-family: 'Involve-Regular';
+  src: url('./fonts/Involve-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Involve-Medium';
+  src: url('./fonts/Involve-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Involve-SemiBold';
+  src: url('./fonts/Involve-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Involve-Bold';
+  src: url('./fonts/Involve-Bold.ttf') format('truetype');
+}
+
+body {
+  font-family: 'Involve-Regular', sans-serif;
+}
+
+.bg-main {
+  background-image: url('./assets/images/bg-main.png'), url('./assets/images/shadow.png');
+  background-size: contain, cover;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+}
