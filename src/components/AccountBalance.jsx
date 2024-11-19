@@ -178,7 +178,6 @@ export default function AccountBalance() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

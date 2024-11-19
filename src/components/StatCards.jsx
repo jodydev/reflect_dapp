@@ -28,19 +28,32 @@ const cardData = [
 
 export default function StatCards() {
   return (
-    <div className="grid grid-cols-3 gap-6 mb-8">
-      {cardData.map((card, index) => (
-        <div
-          key={index}
-          className={`p-6 rounded-3xl shadow-sm hover:scale-105 transition duration-500 hover:cursor-pointer ${card.bgColor} ${card.borderColor || ''}`}
-        >
-          <h3 className={`mb-2 ${card.textColor}`}>{card.title}</h3>
-          <div className="flex items-end gap-3">
-            <span className={`${index === 2 ? "text-white" : "text-black"} text-2xl font-bold`}>{card.value}</span>
-            <span className={card.valueColor}>{card.change}</span>
+    <div className="p-2">
+      <h1 className="text-4xl font-bold mb-8">
+        Create and trade <span className="text-primary">crypto assets</span>
+      </h1>
+      <div className="grid grid-cols-3 gap-6 mb-8">
+        {cardData.map((card, index) => (
+          <div
+            key={index}
+            className={`p-6 rounded-3xl shadow-sm hover:scale-105 transition duration-500 hover:cursor-pointer ${
+              card.bgColor
+            } ${card.borderColor || ""}`}
+          >
+            <h3 className={`mb-2 ${card.textColor}`}>{card.title}</h3>
+            <div className="flex items-end gap-3">
+              <span
+                className={`${
+                  index === 2 ? "text-white" : "text-black"
+                } text-2xl font-bold`}
+              >
+                {card.value}
+              </span>
+              <span className={card.valueColor}>{card.change}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

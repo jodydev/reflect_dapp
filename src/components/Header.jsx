@@ -7,7 +7,7 @@ export default function Header() {
   const { disconnect } = useDisconnect();
 
   return (
-    <div className="flex justify-between items-center p-4">
+    <div className="flex justify-between items-center p-2">
       <div className="flex flex-row space-x-5">
         <div className="relative w-96">
           <span className="absolute inset-y-0 right-0 flex items-center pr-5">
@@ -26,10 +26,10 @@ export default function Header() {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full px-4 py-2 border-none text-black bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2 border-none text-black bg-white/30 shadow-sm rounded-full focus:outline-none transition duration-300 ease-in-out focus:ring-2 focus:ring-primary"
           />
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-3xl">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white/30  rounded-3xl">
           <span>Base Chain</span>
           <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
         </div>

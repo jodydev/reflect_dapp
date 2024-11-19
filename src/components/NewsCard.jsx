@@ -5,13 +5,13 @@ const NewsCard = () => {
   return (
     <div>
       {/* Content container */}
-      <div className="relative z-10 flex flex-col h-full rounded-3xl bg-white/30 p-8 shadow-sm backdrop-blur-sm border border-white/20">
+      <div className="relative z-10 flex flex-col h-full rounded-3xl bg-white/30 p-8 shadow-sm backdrop-blur-sm">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-2">
           <span className="inline-flex items-center rounded-full bg-primary px-3 py-1 text-sm font-medium text-white">
             News
           </span>
-          <h3 className="mt-4 text-black text-3xl font-bold">
+          <h3 className="mt-4 text-black text-2xl font-bold">
             Reflect latest News
           </h3>
         </div>
@@ -38,8 +38,8 @@ const NewsCard = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-6 pt-4 border-t border-gray-200/30">
-          <button className="inline-flex items-center gap-2 text-black underline">
+        <div className="mt-2 border-gray-200/30">
+          <button className="text-xs inline-flex items-center gap-2 text-black underline hover:no-underline hover:scale-105 transition duration-300 ease-in-out">
             Read more
             <ArrowRight size={16} />
           </button>
