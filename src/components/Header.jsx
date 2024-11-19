@@ -1,22 +1,13 @@
-import { useAccount, useConnect } from 'wagmi'; 
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 import Setting from "../assets/icons/setting.png";
+import WalletOptions from "./wallet/WalletOptions";
 
 export default function Header() {
-  const { connect, connectors } = useConnect();  // Usa il hook per connettere un wallet
-  const { isConnected, address, isConnecting } = useAccount();  // Usa il hook per ottenere l'account collegato
-
-  // Funzione per connettere il wallet
-  const connectWallet = (connector) => {
-    connect(connector);
-  };
-
-  // Stampa le informazioni nella console
-  console.log("Connected:", isConnected);
-  console.log("Wallet Address:", address);
-  console.log("Is Connecting:", isConnecting);
+  const { isConnected, address, isConnecting } = useAccount(); 
+  const { disconnect } = useDisconnect();
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center p-4">
       <div className="flex flex-row space-x-5">
         <div className="relative w-96">
           <span className="absolute inset-y-0 right-0 flex items-center pr-5">
@@ -35,24 +26,31 @@ export default function Header() {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full px-4 py-2 border-none text-black bg-gray-200 rounded-full focus:outline-none focus:border-primary"
+            className="w-full px-4 py-2 border-none text-black bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-3xl ">
+        <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-3xl">
           <span>Base Chain</span>
           <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="p-2 hover:bg-gray-100 rounded-lg transition duration-300 ease-in-out transform hover:scale-110">
+        <button className="p-2 hover:bg-white/20 rounded-lg transition duration-300 ease-in-out transform hover:scale-110">
           <img src={Setting} className="w-6 h-6" />
         </button>
 
-        {/* Bottone per connettere il wallet */}
-        <w3m-button onClick={() => connectWallet(connectors)} /> 
+        {!isConnected ? (
+          <WalletOptions />
+        ) : (
+          <button
+            onClick={disconnect}
+            className="py-2 px-6 bg-dark text-white rounded-3xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center"
+          >
+            Disconnect Wallet
+          </button>
+        )}
       </div>
-
     </div>
   );
 }
