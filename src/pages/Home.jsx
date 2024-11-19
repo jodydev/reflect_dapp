@@ -1,10 +1,12 @@
 import Header from "../components/Header";
 import StatCards from "../components/StatCards";
 import TreadingCards from "../components/TreadingCards";
+import AccountBalance from "../components/AccountBalance";
 import NewsCard from "../components/NewsCard";
 import Chart from "../components/Chart";
 
 const Home = () => {
+  
   return (
     <div className="space-y-6">
       <Header />
@@ -19,11 +21,14 @@ const Home = () => {
             </h1>
 
             <StatCards />
-
             <Chart />
           </div>
-          <div className="relative flex flex-col w-1/3 items-center justify-center">
+
+          <div className="relative flex flex-col w-1/3 items-center justify-center space-y-10">
+            <AccountBalance />
+            
             <NewsCard />
+
           </div>
         </div>
 

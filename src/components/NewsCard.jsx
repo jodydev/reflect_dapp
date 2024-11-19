@@ -3,7 +3,7 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 
 const NewsCard = () => {
   return (
-    <div className="min-h-[400px]">
+    <div>
       {/* Content container */}
       <div className="relative z-10 flex flex-col h-full rounded-3xl bg-white/30 p-8 shadow-sm backdrop-blur-sm border border-white/20">
         {/* Header */}

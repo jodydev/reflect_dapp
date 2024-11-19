@@ -1,6 +1,20 @@
+import { useAccount, useConnect } from 'wagmi'; 
 import Setting from "../assets/icons/setting.png";
 
 export default function Header() {
+  const { connect, connectors } = useConnect();  // Usa il hook per connettere un wallet
+  const { isConnected, address, isConnecting } = useAccount();  // Usa il hook per ottenere l'account collegato
+
+  // Funzione per connettere il wallet
+  const connectWallet = (connector) => {
+    connect(connector);
+  };
+
+  // Stampa le informazioni nella console
+  console.log("Connected:", isConnected);
+  console.log("Wallet Address:", address);
+  console.log("Is Connecting:", isConnecting);
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex flex-row space-x-5">
@@ -31,13 +45,14 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="p-2 hover:bg-gray-100 rounded-lg">
+        <button className="p-2 hover:bg-gray-100 rounded-lg transition duration-300 ease-in-out transform hover:scale-110">
           <img src={Setting} className="w-6 h-6" />
         </button>
-        <button className="px-6 py-2 bg-primary text-white rounded-3xl hover:bg-primary/90">
-          Connect Wallet
-        </button>
+
+        {/* Bottone per connettere il wallet */}
+        <w3m-button onClick={() => connectWallet(connectors)} /> 
       </div>
+
     </div>
   );
 }

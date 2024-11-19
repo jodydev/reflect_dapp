@@ -33,3 +33,7 @@ body {
   background-repeat: no-repeat, no-repeat;
   background-position: center, center;
 }
+
+.wui-text{
+  color: red !important;
+}
