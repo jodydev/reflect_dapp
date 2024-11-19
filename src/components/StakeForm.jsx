@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { ArrowDownIcon } from "@heroicons/react/24/outline";
 
-export default function SwapForm() {
+export default function StakeForm() {
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
 
   return (
     <div className="max-w-xl mx-auto">
       <div className="bg-white bg-white/40 backdrop-filter-sm rounded-3xl p-10">
-        <h2 className="text-2xl font-bold mb-6">Swap Tokens</h2>
+        <h2 className="text-2xl font-bold mb-6">Stake Tokens</h2>
 
         {/* From Token */}
         <div className="bg-gray-50 p-4 rounded-xl mb-4">
@@ -31,7 +31,7 @@ export default function SwapForm() {
           </div>
         </div>
 
-        {/* Swap Button */}
+        {/* Stake Button */}
         <div className="flex justify-center -my-2 relative z-10">
           <button className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-gray-50">
             <ArrowDownIcon className="w-5 h-5" />
@@ -59,7 +59,7 @@ export default function SwapForm() {
           </div>
         </div>
 
-        {/* Swap Details */}
+        {/* Stake Details */}
         <div className="bg-gray-50 p-4 rounded-xl mb-6">
           <div className="flex justify-between mb-2">
             <span className="text-gray-500">Price</span>
