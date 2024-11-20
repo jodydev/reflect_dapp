@@ -20,7 +20,7 @@ function Sidebar() {
 
   return (
     <div className="w-20 bg-trasparent shadow-md">
-      <div className="flex flex-col items-center py-8 space-y-8">
+      <div className="flex flex-col items-center py-8 space-y-8 w-20">
         <div className="mb-8">
           <img src={Logo} alt="Logo" className="w-6" />
         </div>

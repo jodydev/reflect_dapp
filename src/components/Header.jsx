@@ -26,10 +26,10 @@ export default function Header() {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full px-4 py-2 border-none text-black bg-white/30 shadow-sm rounded-full focus:outline-none transition duration-300 ease-in-out focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2 border-none text-black bg-white/30 shadow-sm rounded-xl focus:outline-none transition duration-300 ease-in-out focus:ring-2 focus:ring-primary"
           />
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-white/30  rounded-3xl">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white/30  rounded-xl">
           <span>Base Chain</span>
           <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
         </div>
@@ -41,11 +41,11 @@ export default function Header() {
         </button>
 
         {!isConnected ? (
-          <WalletOptions />
+          <WalletOptions isHeaderButton={true} />
         ) : (
           <button
             onClick={disconnect}
-            className="py-2 px-6 bg-dark text-white rounded-3xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center"
+            className="py-2 px-6 bg-dark text-white rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center"
           >
             Disconnect Wallet
           </button>

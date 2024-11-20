@@ -5,7 +5,7 @@ import { X, Wallet } from "lucide-react";
 import walletLogos from "../../utils/walletLogos";
 import { ShieldCheck, Lock } from "lucide-react";
 
-export default function WalletOptionsModal() {
+export default function WalletOptionsModal( {isHeaderButton}) {
   const { connectors, connect } = useConnect();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -13,7 +13,7 @@ export default function WalletOptionsModal() {
     <div>
       <button
         onClick={() => setModalIsOpen(true)}
-        className="flex items-center gap-2 bg-primary text-dark px-6 py-2 rounded-3xl hover:scale-105 transition duration-300 ease-in-out"
+        className={`${isHeaderButton ? "text-dark rounded-xl py-2" : " text-white rounded-2xl w-full py-4" } flex items-center justify-center gap-2 bg-primary px-6  hover:scale-105 transition duration-300 ease-in-out`}
       >
         Connect Wallet
       </button>
@@ -27,9 +27,7 @@ export default function WalletOptionsModal() {
               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {/* Gradient Background Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-200 opacity-20 pointer-events-none"></div>
-
+            
             {/* Close Button */}
             <button
               onClick={() => setModalIsOpen(false)}
@@ -62,10 +60,10 @@ export default function WalletOptionsModal() {
                   }}
                   className={`
                   flex flex-col items-center justify-center p-5 
-                bg-gray-200 border-blue-500
+                bg-gray-100 
                   rounded-xl border-2 border-transparent 
                   transition-all duration-300 
-                  transform hover:scale-105 hover:bg-primary
+                  transform hover:scale-105 hover:bg-primary hover:text-white
                   relative overflow-hidden
                 `}
                 >
@@ -88,7 +86,8 @@ export default function WalletOptionsModal() {
             </div>
 
             {/* Footer */}
-            <div className="text-center p-4 bg-gray-100/50 flex items-center justify-center">
+            
+            <div className="text-center pt-4 pb-10 flex items-center justify-center">
               <Lock className="w-4 h-4 mr-2 text-gray-500" />
               <p className="text-xs text-gray-600">
                 Your wallet is securely connected via WalletConnect

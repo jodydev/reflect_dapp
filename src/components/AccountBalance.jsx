@@ -6,7 +6,7 @@ import {
   Coins,
   PiggyBank,
 } from "lucide-react";
-import { useAccount, useBalance, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { useState, useEffect, useCallback } from "react";
 
 import NoWalletConnected from "./wallet/NoWalletConnected";
@@ -27,7 +27,6 @@ export default function AccountBalance() {
   const [refreshBalance, setRefreshBalance] = useState(false);
 
   const { address, isConnected, connector } = useAccount();
-  const { disconnect } = useDisconnect();
   const { data, isError, isLoading, refetch } = useBalance({
     address,
     watch: true,

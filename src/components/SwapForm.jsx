@@ -1,20 +1,163 @@
-import { useState } from "react";
-import { ArrowDownIcon } from "@heroicons/react/24/outline";
+import { useState, useEffect } from "react";
+import { ArrowsUpDownIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { Loader2 } from "lucide-react";
+import { useAccount, useBalance, useContractWrite } from "wagmi";
+import { ethers } from "ethers";
+import tokens from "../utils/tokens";
+import axios from "axios";
+
+import TokenSelectModal from "./swap/TokenSelectModal";
+import SlippageSelector from "./swap/SlippageSelector";
+import PriceDetails from "./swap/PriceDetails";
+
+const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+const UNISWAP_ROUTER_ABI = []; // Inserisci l'ABI del router Uniswap
 
 export default function SwapForm() {
+  const [fromToken, setFromToken] = useState(tokens[0]);
+  const [toToken, setToToken] = useState(tokens[1]);
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
+  const [isSelectingFromToken, setIsSelectingFromToken] = useState(false);
+  const [isSelectingToToken, setIsSelectingToToken] = useState(false);
+  const [slippage, setSlippage] = useState(0.5); // 0.5% default slippage
+  const [priceDetails, setPriceDetails] = useState({
+    price: null,
+    minReceived: null,
+    priceImpact: null,
+    route: null,
+    isLoading: false,
+  });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { address } = useAccount();
+  const { data: fromTokenBalance } = useBalance({
+    address,
+    token: fromToken.address,
+    watch: true,
+  });
+
+  const { data: toTokenBalance } = useBalance({
+    address,
+    token: toToken.address,
+    watch: true,
+  });
+
+  const { write: executeSwap, isLoading: isSwapping } = useContractWrite({
+    address: UNISWAP_ROUTER_ADDRESS,
+    abi: UNISWAP_ROUTER_ABI,
+    functionName: "swapExactTokensForTokens",
+    args: priceDetails.route
+      ? [
+          ethers.parseUnits(fromAmount || "0", fromToken.decimals),
+          ethers.parseUnits(priceDetails.minReceived || "0", toToken.decimals),
+          priceDetails.route,
+          address,
+          Math.floor(Date.now() / 1000) + 1800, // 30-minute deadline
+        ]
+      : undefined,
+    enabled: Boolean(priceDetails.route && fromAmount && toAmount),
+  });
+
+  useEffect(() => {
+    if (fromAmount && fromAmount > 0) fetchSwapDetails();
+  }, [fromAmount, fromToken, toToken, slippage]);
+
+  const fetchSwapDetails = async () => {
+    if (!fromAmount || fromAmount <= 0) return;
+
+    setPriceDetails((prev) => ({ ...prev, isLoading: true }));
+    setError("");
+
+    try {
+      const response = await axios.get("https://api.uniswap.org/v1/quote", {
+        params: {
+          tokenInAddress: fromToken.address,
+          tokenOutAddress: toToken.address,
+          tokenInChainId: 1,
+          tokenOutChainId: 1,
+          amount: ethers.parseUnits(fromAmount, fromToken.decimals).toString(),
+          type: "exactIn",
+        },
+      });
+
+      const { route, quote, priceImpact } = response.data;
+      const price = ethers.formatUnits(quote, toToken.decimals);
+      const minReceived = (Number(price) * (1 - slippage / 100)).toFixed(
+        toToken.decimals
+      );
+
+      setPriceDetails({
+        price: (quote / Math.pow(10, toToken.decimals)).toFixed(6),
+        minReceived,
+        priceImpact,
+        route: route[0].map((hop) => hop.tokenAddress),
+        isLoading: false,
+      });
+      setToAmount(price);
+    } catch (err) {
+      setError("Failed to fetch swap details. Please try again.");
+      console.error(err);
+      setPriceDetails((prev) => ({ ...prev, isLoading: false }));
+    }
+  };
+
+  const handleSwap = async () => {
+    if (!fromAmount || !toAmount || fromAmount <= 0 || toAmount <= 0) {
+      setError("Please enter valid amounts.");
+      return;
+    }
+
+    try {
+      await executeSwap?.();
+    } catch (err) {
+      setError("Swap failed. Please try again.");
+      console.error(err);
+    }
+  };
+
+  const resetForm = () => {
+    setFromToken(tokens[0]);
+    setToToken(tokens[1]);
+    setFromAmount("");
+    setToAmount("");
+    setSlippage(0.5);
+    setPriceDetails({
+      price: null,
+      minReceived: null,
+      priceImpact: null,
+      route: null,
+      isLoading: false,
+    });
+    setError("");
+  };
 
   return (
-    <div className="max-w-xl mx-auto">
-      <div className="bg-white bg-white/40 backdrop-filter-sm rounded-3xl p-10">
-        <h2 className="text-2xl font-bold mb-6">Swap Tokens</h2>
+    <div className="w-2/3 max-w-xl mx-auto">
+      <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+        <SlippageSelector resetForm={resetForm} />
 
-        {/* From Token */}
-        <div className="bg-gray-50 p-4 rounded-xl mb-4">
+        <TokenSelectModal
+          isOpen={isSelectingFromToken}
+          onClose={() => setIsSelectingFromToken(false)}
+          onSelect={(token) => setFromToken(token)}
+          selectedToken={fromToken}
+        />
+
+        <TokenSelectModal
+          isOpen={isSelectingToToken}
+          onClose={() => setIsSelectingToToken(false)}
+          onSelect={(token) => setToToken(token)}
+          selectedToken={toToken}
+        />
+
+        <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4">
           <div className="flex justify-between mb-2">
             <span className="text-gray-500">From</span>
-            <span className="text-gray-500">Balance: 0.0</span>
+            <span className="text-gray-500">
+              Balance: {fromTokenBalance?.formatted || "0.00"}
+            </span>
           </div>
           <div className="flex gap-4">
             <input
@@ -24,60 +167,74 @@ export default function SwapForm() {
               placeholder="0.0"
               className="bg-transparent text-2xl outline-none flex-1"
             />
-            <button className="px-4 py-2 bg-gray-100 rounded-xl font-medium flex items-center gap-2">
-              <div className="w-6 h-6 bg-primary rounded-full"></div>
-              ETH
+            <button
+              onClick={() => setIsSelectingFromToken(true)}
+              className="bg-white/60 backdrop-filter-sm rounded-xl p-2 hover:bg-white hover:scale-105 transition-transform duration-300 ease-in-out"
+            >
+              <img
+                src={fromToken.logoURI}
+                alt={fromToken.symbol}
+                className="w-8 h-8"
+              />
             </button>
           </div>
         </div>
 
-        {/* Swap Button */}
-        <div className="flex justify-center -my-2 relative z-10">
-          <button className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-gray-50">
-            <ArrowDownIcon className="w-5 h-5" />
+        <div className="absolute z-20 left-[45%] top-[33%]">
+          <button
+            onClick={() => {
+              setFromToken(toToken);
+              setToToken(fromToken);
+              setFromAmount("");
+              setToAmount("");
+            }}
+            className="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-gray-50 hover:scale-105 transition-transform duration-300 ease-in-out"
+          >
+            <ArrowsUpDownIcon className="w-5 h-5" />
           </button>
         </div>
 
-        {/* To Token */}
-        <div className="bg-gray-50 p-4 rounded-xl mb-4">
+        <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4">
           <div className="flex justify-between mb-2">
             <span className="text-gray-500">To</span>
-            <span className="text-gray-500">Balance: 0.0</span>
+            <span className="text-gray-500">
+              Balance: {toTokenBalance?.formatted || "0.00"}
+            </span>
           </div>
           <div className="flex gap-4">
             <input
-              type="number"
+              type="text"
               value={toAmount}
-              onChange={(e) => setToAmount(e.target.value)}
+              disabled
               placeholder="0.0"
               className="bg-transparent text-2xl outline-none flex-1"
             />
-            <button className="px-4 py-2 bg-gray-100 rounded-xl font-medium flex items-center gap-2">
-              <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
-              Select token
+            <button
+              onClick={() => setIsSelectingToToken(true)}
+              className="bg-white/60 backdrop-filter-sm rounded-xl p-2 hover:bg-white  hover:scale-105 transition-transform duration-300 ease-in-out"
+            >
+              <img
+                src={toToken.logoURI}
+                alt={toToken.symbol}
+                className="w-8 h-8"
+              />
             </button>
           </div>
         </div>
 
-        {/* Swap Details */}
-        <div className="bg-gray-50 p-4 rounded-xl mb-6">
-          <div className="flex justify-between mb-2">
-            <span className="text-gray-500">Price</span>
-            <span>1 ETH = 1,800 USDT</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span className="text-gray-500">Minimum received</span>
-            <span>1,790 USDT</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500">Price Impact</span>
-            <span className="text-green-500">{"<0.01%"}</span>
-          </div>
-        </div>
+        <PriceDetails priceDetails={priceDetails} />
 
-        <button className="w-full py-4 bg-primary text-white rounded-xl font-medium hover:bg-primary/90">
-          Connect Wallet
-        </button>
+        {error && <div className="text-red-500 mt-2">{error}</div>}
+
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={handleSwap}
+            disabled={isSwapping || !priceDetails.route}
+            className="w-full bg-primary text-white py-3 rounded-xl"
+          >
+            {isSwapping ? <Loader2 className="animate-spin" /> : "Swap"}
+          </button>
+        </div>
       </div>
     </div>
   );

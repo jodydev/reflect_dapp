@@ -12,7 +12,7 @@ function App() {
     <Router>
       <div className="flex min-h-screen bg-gradient-to-br from-gray-100 to-orange-50">
         <Sidebar />
-        <main className="flex-1 p-8 bg-main">
+        <main className="flex-1 p-8 bg-main w-1/3">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/swap" element={<Swap />} />
