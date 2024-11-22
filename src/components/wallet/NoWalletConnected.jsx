@@ -32,14 +32,6 @@ export default function NoWalletConnected() {
       >
         Connect your wallet to view your balance and manage your assets.
       </motion.p>
-      <motion.button
-        className="px-6 py-3 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition duration-200 ease-in-out"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
-        Connect Wallet
-      </motion.button>
     </motion.div>
   );
 }
