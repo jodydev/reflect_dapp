@@ -1,5 +1,6 @@
 import { Wallet } from "lucide-react";
 import { motion } from "framer-motion";
+import ConnectWalletButton from "./ConnectWalletButton";
 
 export default function NoWalletConnected() {
   return (
@@ -14,7 +15,7 @@ export default function NoWalletConnected() {
         whileHover={{ scale: 1.2 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
-        <Wallet className="w-10 h-10 text-dark transition-colors duration-300 hover:text-green-500" />
+        <Wallet className="w-10 h-10 text-dark" />
       </motion.div>
       <motion.h1
         className="text-2xl font-bold mb-3 text-gray-800 text-center"
@@ -32,6 +33,7 @@ export default function NoWalletConnected() {
       >
         Connect your wallet to view your balance and manage your assets.
       </motion.p>
+      
     </motion.div>
   );
 }

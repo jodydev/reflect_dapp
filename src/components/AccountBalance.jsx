@@ -9,6 +9,7 @@ import {
 import { useAccount, useBalance } from "wagmi";
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 import NoWalletConnected from "./wallet/NoWalletConnected";
 import LoadingWallet from "./wallet/LoadingWallet";
@@ -33,27 +34,27 @@ export default function AccountBalance() {
     watch: true,
   });
 
-  const [transactions, setTransactions] = useState([]);
+  // const [transactions, setTransactions] = useState([]);
   
-  useEffect(() => {
-    if (isConnected && address) {
-      // Recupera le ultime transazioni quando l'indirizzo è connesso
-      fetchTransactions(address).then(setTransactions);
-    }
-  }, [isConnected, address]);
+  // useEffect(() => {
+  //   if (isConnected && address) {
+  //     // Recupera le ultime transazioni quando l'indirizzo è connesso
+  //     fetchTransactions(address).then(setTransactions);
+  //   }
+  // }, [isConnected, address]);
 
-  const fetchTransactions = async (address) => {
-    const apiKey = 'your-etherscan-api-key'; // Sostituisci con la tua chiave API di Etherscan
-    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=${apiKey}`;
+  // const fetchTransactions = async (address) => {
+  //   const apiKey = 'your-etherscan-api-key'; // Sostituisci con la tua chiave API di Etherscan
+  //   const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=${apiKey}`;
     
-    try {
-      const response = await axios.get(url);
-      return response.data.result; // Restituisce l'array delle transazioni
-    } catch (error) {
-      console.error("Error fetching transactions", error);
-      return [];
-    }
-  };
+  //   try {
+  //     const response = await axios.get(url);
+  //     return response.data.result; // Restituisce l'array delle transazioni
+  //   } catch (error) {
+  //     console.error("Error fetching transactions", error);
+  //     return [];
+  //   }
+  // };
 
   // Imposta il nome del wallet e il logo quando il wallet è connesso
   useEffect(() => {

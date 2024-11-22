@@ -5,15 +5,43 @@ import { X, Wallet } from "lucide-react";
 import walletLogos from "../../utils/walletLogos";
 import { ShieldCheck, Lock } from "lucide-react";
 
-export default function WalletOptionsModal( {isHeaderButton}) {
+export default function WalletOptionsModal({ isHeaderButton }) {
   const { connectors, connect } = useConnect();
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const modalRef = React.useRef(null);
+
+  // Funzione per il trascinamento verticale
+  const handleMouseDown = (event) => {
+    const modal = modalRef.current;
+    if (!modal) return;
+
+    let startY = event.pageY; // Coordinate iniziali
+    let scrollTop = modal.scrollTop; // Posizione corrente dello scroll
+
+    // Disabilita la selezione del testo
+    document.body.style.userSelect = "none";
+
+    const handleMouseMove = (moveEvent) => {
+      const deltaY = moveEvent.pageY - startY; // Differenza verticale
+      modal.scrollTop = scrollTop - deltaY; // Aggiorna la posizione dello scroll
+    };
+
+    const handleMouseUp = () => {
+      // Rimuove il listener e ripristina la selezione del testo
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.userSelect = ""; // Ripristina la selezione
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
 
   return (
-    <div>
+    <div className="w-full">
       <button
         onClick={() => setModalIsOpen(true)}
-        className={`${isHeaderButton ? "text-dark rounded-xl py-2" : " text-white rounded-2xl w-full py-4" } flex items-center justify-center gap-2 bg-primary px-6  hover:scale-105 transition duration-300 ease-in-out`}
+        className="text-nowrap py-2 px-6 bg-primary text-white rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center w-full md:w-auto"
       >
         Connect Wallet
       </button>
@@ -21,17 +49,21 @@ export default function WalletOptionsModal( {isHeaderButton}) {
       {modalIsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div
-            className="bg-white w-full max-w-md rounded-2xl shadow-2xl relative animate-fade-in max-h-[90vh] overflow-auto"
+            ref={modalRef}
+            onMouseDown={handleMouseDown} // Aggiunge il drag scroll
+            className="absolute w-full max-w-md bg-white rounded-2xl shadow-2xl p-6"
             style={{
-              animation: "fade-in 0.3s ease-out",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              maxHeight: "90vh",
+              overflow: "hidden", // Nasconde le barre di scorrimento
             }}
           >
-            
             {/* Close Button */}
             <button
               onClick={() => setModalIsOpen(false)}
-              className="absolute top-4 right-4 z-50 text-gray-500 hover:text-gray-700 ounded-full p-2 hover:cursor-pointer"
+              className="absolute top-4 right-4 z-50 text-gray-500 hover:text-gray-700 rounded-full p-2 hover:cursor-pointer"
             >
               <X size={24} />
             </button>
@@ -58,16 +90,8 @@ export default function WalletOptionsModal( {isHeaderButton}) {
                     connect({ connector });
                     setModalIsOpen(false);
                   }}
-                  className={`
-                  flex flex-col items-center justify-center p-5 
-                bg-gray-100 
-                  rounded-xl border-2 border-transparent 
-                  transition-all duration-300 
-                  transform hover:scale-105 hover:bg-primary hover:text-white
-                  relative overflow-hidden
-                `}
+                  className="flex flex-col items-center justify-center p-5 bg-gray-100 rounded-xl border-2 border-transparent transition-all duration-300 transform hover:scale-105 hover:bg-primary hover:text-white relative overflow-hidden"
                 >
-                  {/* Subtle Hover Effect */}
                   <div className="absolute inset-0 bg-primary opacity-0 hover:opacity-10 transition-opacity"></div>
 
                   <img
@@ -86,7 +110,6 @@ export default function WalletOptionsModal( {isHeaderButton}) {
             </div>
 
             {/* Footer */}
-            
             <div className="text-center pt-4 pb-10 flex items-center justify-center">
               <Lock className="w-4 h-4 mr-2 text-gray-500" />
               <p className="text-xs text-gray-600">

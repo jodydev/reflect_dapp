@@ -92,7 +92,7 @@ const Charts = () => {
         />
       </motion.div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Volume Chart */}
         <motion.div
           className="p-6 bg-white/20 backdrop-blur-sm rounded-3xl"

@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { motion } from "framer-motion"; 
+import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { getTokenPrices } from "../../hooks/getTokenPrices";
 
 const TrendingTokens = () => {
@@ -10,6 +10,7 @@ const TrendingTokens = () => {
   const scrollLeft = useRef(0);
   const velocity = useRef(0);
   let animationFrame;
+  const [isDraggingState, setIsDraggingState] = useState(false); // Stato per controllare se è in corso il drag
 
   const handleMouseDown = (e) => {
     const container = scrollContainerRef.current;
@@ -17,7 +18,18 @@ const TrendingTokens = () => {
     startX.current = e.pageX - container.offsetLeft;
     scrollLeft.current = container.scrollLeft;
     velocity.current = 0;
-    container.style.scrollBehavior = "auto"; 
+    container.style.scrollBehavior = "auto";
+    setIsDraggingState(true); // Imposta lo stato a true quando inizia il drag
+  };
+
+  const handleTouchStart = (e) => {
+    const container = scrollContainerRef.current;
+    isDragging.current = true;
+    startX.current = e.touches[0].pageX - container.offsetLeft;
+    scrollLeft.current = container.scrollLeft;
+    velocity.current = 0;
+    container.style.scrollBehavior = "auto";
+    setIsDraggingState(true); // Imposta lo stato a true quando inizia il drag
   };
 
   const handleMouseMove = (e) => {
@@ -32,10 +44,31 @@ const TrendingTokens = () => {
     container.scrollLeft = scrollLeft.current - delta;
   };
 
+  const handleTouchMove = (e) => {
+    if (!isDragging.current) return;
+
+    const container = scrollContainerRef.current;
+    e.preventDefault();
+    const x = e.touches[0].pageX - container.offsetLeft;
+    const delta = x - startX.current;
+
+    velocity.current = delta * 0.2; // Imposta la velocità basata sul movimento
+    container.scrollLeft = scrollLeft.current - delta;
+  };
+
   const handleMouseUpOrLeave = () => {
     if (!isDragging.current) return;
 
     isDragging.current = false;
+    setIsDraggingState(false); // Imposta lo stato a false quando finisce il drag
+    addSmoothScrolling();
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging.current) return;
+
+    isDragging.current = false;
+    setIsDraggingState(false); // Imposta lo stato a false quando finisce il drag
     addSmoothScrolling();
   };
 
@@ -60,40 +93,51 @@ const TrendingTokens = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-20">
       <h2 className="text-3xl font-semibold mb-4">Trending Tokens</h2>
       <motion.div
         ref={scrollContainerRef}
-        className="flex rounded-xl w-full overflow-x-hidden cursor-grab"
+        className="flex rounded-xl w-full overflow-hidden cursor-grab"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }} // Animazione di entrata per il contenitore
+        transition={{ duration: 0.5 }}
+        style={{ userSelect: isDraggingState ? "none" : "auto" }} 
       >
         {tokenData &&
           tokenData.map((token) => (
             <motion.div
               key={token.id}
-              className="p-4 w-full min-w-[200px] flex items-center gap-3 transition duration-500 hover:cursor-pointer bg-white/20 backdrop-blur-sm rounded-xl"
-              whileHover={{
-                scale: 1.05, // Leggera animazione di zoom sui token
-                transition: { duration: 0.3 },
-              }}
-              whileTap={{ scale: 0.98 }} // Effetto di pressione sui token
+              className="p-4 w-full min-w-[200px] flex items-center transition duration-500 hover:cursor-pointer bg-white/20 backdrop-blur-sm"
             >
               <img
                 src={token.image}
                 alt={token.name}
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full me-3"
               />
               <div>
-                <span className="font-bold text-sm">
+                <motion.p
+                  className="font-bold text-sm text-nowrap"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
                   {token.name} ({token.symbol.toUpperCase()})
-                </span>
-                <p className="text-sm mt-2">${token.current_price}</p>
+                </motion.p>
+                <motion.p
+                  className="text-sm mt-2"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  ${token.current_price}
+                </motion.p>
                 <motion.p
                   className={`text-sm ${
                     token.price_change_percentage_24h < 0
@@ -102,13 +146,19 @@ const TrendingTokens = () => {
                   }`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }} // Animazione di entrata
+                  transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   {token.price_change_percentage_24h.toFixed(2)}%
                 </motion.p>
-                <p className="text-xs text-gray-500">
+
+                <motion.p
+                  className="text-xs text-gray-500 text-nowrap"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
                   Market Cap Rank: {token.market_cap_rank}
-                </p>
+                </motion.p>
               </div>
             </motion.div>
           ))}

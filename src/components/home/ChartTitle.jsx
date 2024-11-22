@@ -14,7 +14,7 @@ export default function ChartTitle({ title, activeState, setActiveState }) {
   });
 
   return (
-    <div className="flex items-start justify-between mb-4">
+    <div className="flex flex-col md:flex-row items-start justify-between mb-4">
       <div className="flex flex-col items-start gap-2">
         <div className="flex flex-row items-start gap-2">
           <img src={Logo} alt="RFL" className="w-4 h-6" />
@@ -23,7 +23,7 @@ export default function ChartTitle({ title, activeState, setActiveState }) {
         <span className="font-bold text-dark text-xs text-nowrap">{`${currentDate} ${currentTime}`}</span>
       </div>
 
-      <div className="flex gap-1">
+      <div className="flex gap-1 mt-2 md:mt-0">
         {["5m", "1h", "6h", "24h"].map((time) => (
           <TimeButton
             key={time}

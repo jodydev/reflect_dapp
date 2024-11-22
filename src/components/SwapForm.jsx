@@ -136,6 +136,7 @@ export default function SwapForm() {
   return (
     <div className="w-2/3 max-w-xl mx-auto">
       <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+      
         <SlippageSelector resetForm={resetForm} />
 
         <TokenSelectModal
