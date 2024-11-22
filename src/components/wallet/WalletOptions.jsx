@@ -21,7 +21,7 @@ export default function WalletOptionsModal( {isHeaderButton}) {
       {modalIsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div
-            className="bg-white w-full max-w-md rounded-2xl shadow-2xl relative animate-fade-in max-h-[90vh] overflow-scroll"
+            className="bg-white w-full max-w-md rounded-2xl shadow-2xl relative animate-fade-in max-h-[90vh] overflow-auto"
             style={{
               animation: "fade-in 0.3s ease-out",
               boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",

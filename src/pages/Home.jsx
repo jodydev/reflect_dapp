@@ -1,9 +1,9 @@
 import Header from "../components/Header";
-import StatCards from "../components/StatCards";
-import TreadingCards from "../components/TreadingCards";
 import AccountBalance from "../components/AccountBalance";
-import NewsCard from "../components/NewsCard";
-import Chart from "../components/Chart";
+import StatCards from "../components/home/StatCards";
+import TreadingCards from "../components/home/TreadingCards";
+import NewsCard from "../components/home/NewsCard";
+import Charts from "../components/home/Charts";
 
 const Home = () => {
   return (
@@ -22,7 +22,7 @@ const Home = () => {
 
             <StatCards />
 
-            <Chart />
+            <Charts />
           </div>
 
           <div className="relative flex flex-col w-1/3 items-center justify-center space-y-10">

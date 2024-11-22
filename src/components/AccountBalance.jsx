@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useAccount, useBalance } from "wagmi";
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 
 import NoWalletConnected from "./wallet/NoWalletConnected";
 import LoadingWallet from "./wallet/LoadingWallet";
@@ -31,6 +32,28 @@ export default function AccountBalance() {
     address,
     watch: true,
   });
+
+  const [transactions, setTransactions] = useState([]);
+  
+  useEffect(() => {
+    if (isConnected && address) {
+      // Recupera le ultime transazioni quando l'indirizzo è connesso
+      fetchTransactions(address).then(setTransactions);
+    }
+  }, [isConnected, address]);
+
+  const fetchTransactions = async (address) => {
+    const apiKey = 'your-etherscan-api-key'; // Sostituisci con la tua chiave API di Etherscan
+    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=${apiKey}`;
+    
+    try {
+      const response = await axios.get(url);
+      return response.data.result; // Restituisce l'array delle transazioni
+    } catch (error) {
+      console.error("Error fetching transactions", error);
+      return [];
+    }
+  };
 
   // Imposta il nome del wallet e il logo quando il wallet è connesso
   useEffect(() => {
@@ -78,6 +101,24 @@ export default function AccountBalance() {
     setTimeout(() => setRefreshBalance(false), 2000);
   }, [refetch]);
 
+  // Varianti per animazioni
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+  };
+
+  const balanceVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, delay: 0.2 },
+    },
+  };
+
   // Not Connected State
   if (!isConnected) {
     return <NoWalletConnected />;
@@ -98,18 +139,28 @@ export default function AccountBalance() {
   const availableBalance = totalBalance;
 
   return (
-    <div className="w-full bg-white bg-white/30 backdrop-blur-sm relative z-10 flex flex-col items-center justify-center rounded-3xl  p-8 shadow-sm ">
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      className="w-full bg-white bg-white/30 backdrop-blur-sm relative z-10 flex flex-col items-center justify-center rounded-3xl p-8 shadow-sm "
+    >
       {/* Wallet Header */}
       <div className="w-full flex justify-between items-center mb-6">
         <div className="flex items-center space-x-4">
           {walletLogo && (
-            <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center border-2 border-primary">
+            <motion.div
+              className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center border-2 border-primary"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.3 }}
+            >
               <img
                 src={walletLogo}
                 alt={`${walletName} Logo`}
                 className="w-10 h-10 object-contain"
               />
-            </div>
+            </motion.div>
           )}
           <div>
             <h2 className="text-xl font-bold text-gray-800">{walletName}</h2>
@@ -136,7 +187,13 @@ export default function AccountBalance() {
       </div>
 
       {/* Wallet Details Grid */}
-      <div className="w-full grid grid-cols-2 gap-4 bg-white/10 rounded-2xl p-4 backdrop-blur-sm">
+      <motion.div
+        variants={balanceVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className="w-full grid grid-cols-2 gap-4 bg-white/10 rounded-2xl p-4 backdrop-blur-sm"
+      >
         <div className="flex items-center space-x-3">
           <Wallet className="w-6 h-6 text-dark" />
           <div>
@@ -176,7 +233,46 @@ export default function AccountBalance() {
             </span>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Transazioni recenti */}
+      {/* <motion.div
+        variants={balanceVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        className="w-full bg-white/10 rounded-2xl p-4 mt-6 backdrop-blur-sm"
+      >
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Ultime Transazioni</h3>
+        <table className="w-full text-sm text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+            <tr>
+              <th className="px-4 py-2">Hash</th>
+              <th className="px-4 py-2">Valore</th>
+              <th className="px-4 py-2">Data</th>
+              <th className="px-4 py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((tx) => (
+              <tr key={tx.hash} className="bg-white border-b">
+                <td className="px-4 py-2 truncate">
+                  <a href={`https://etherscan.io/tx/${tx.hash}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    {tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}
+                  </a>
+                </td>
+                <td className="px-4 py-2">{tx.value / 1e18} ETH</td>
+                <td className="px-4 py-2">{new Date(tx.timeStamp * 1000).toLocaleString()}</td>
+                <td className="px-4 py-2">
+                  <span className={`text-xs font-semibold ${tx.isError === "0" ? "text-green-500" : "text-red-500"}`}>
+                    {tx.isError === "0" ? 'Success' : 'Failed'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </motion.div> */}
+    </motion.div>
   );
 }
