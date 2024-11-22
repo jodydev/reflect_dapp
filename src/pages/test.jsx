@@ -1,6 +1,5 @@
-// src/pages/Mint.jsx
-import React, { useState } from 'react';
-import { PlusCircleIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { PlusCircleIcon } from '@heroicons/react/24/outline';
 
 const Mint = () => {
   const [tokenName, setTokenName] = useState('');
