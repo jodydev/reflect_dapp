@@ -1,10 +1,9 @@
-import Setting from "../assets/icons/setting.png";
 import ConnectWalletButton from "./wallet/ConnectWalletButton";
 
 export default function Header() {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center p-2">
-      <div className="flex flex-col md:flex-row space-y-5 mb-10 md:mb-0 md:space-y-0 md:space-x-5 w-full">
+      <div className="flex flex-col md:flex-row space-y-5 mb-4 md:mb-0 md:space-y-0 md:space-x-5 w-full">
         <div className="relative w-full md:w-96">
           <span className="absolute inset-y-0 right-0 flex items-center pr-5">
             <svg
@@ -32,10 +31,6 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-4 mt-2 md:mt-0 w-full md:w-auto justify-end">
-        {/* <button className="p-2 hover:bg-white/20 rounded-lg transition duration-300 ease-in-out transform hover:scale-110">
-          <img src={Setting} className="w-6 h-6" />
-        </button> */}
-
         <ConnectWalletButton />
       </div>
     </div>

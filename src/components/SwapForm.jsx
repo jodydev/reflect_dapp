@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { ArrowsUpDownIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useContractWrite } from "wagmi";
 import { ethers } from "ethers";
+import { motion } from "framer-motion";
 import tokens from "../utils/tokens";
 import axios from "axios";
 
@@ -20,7 +21,7 @@ export default function SwapForm() {
   const [toAmount, setToAmount] = useState("");
   const [isSelectingFromToken, setIsSelectingFromToken] = useState(false);
   const [isSelectingToToken, setIsSelectingToToken] = useState(false);
-  const [slippage, setSlippage] = useState(0.5); // 0.5% default slippage
+  const [slippage, setSlippage] = useState(10);
   const [priceDetails, setPriceDetails] = useState({
     price: null,
     minReceived: null,
@@ -29,7 +30,6 @@ export default function SwapForm() {
     isLoading: false,
   });
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const { address } = useAccount();
   const { data: fromTokenBalance } = useBalance({
@@ -134,9 +134,19 @@ export default function SwapForm() {
   };
 
   return (
-    <div className="w-2/3 max-w-xl mx-auto">
-      <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-      
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-xl 2xl:max-w-2xl mx-auto px-0 md:px-6 lg:px-8"
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white/40 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl"
+      >
         <SlippageSelector resetForm={resetForm} />
 
         <TokenSelectModal
@@ -153,20 +163,43 @@ export default function SwapForm() {
           selectedToken={toToken}
         />
 
-        <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4"
+        >
           <div className="flex justify-between mb-2">
-            <span className="text-gray-500">From</span>
-            <span className="text-gray-500">
-              Balance: {fromTokenBalance?.formatted || "0.00"}
-            </span>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-gray-500 text-sm sm:text-base"
+            >
+              From
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-gray-500 text-sm sm:text-base"
+            >
+              Balance:{" "}
+              {fromTokenBalance
+                ? ethers.formatUnits(
+                    fromTokenBalance.value,
+                    fromTokenBalance.decimals
+                  )
+                : "0.00"}
+            </motion.p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2 flex-wrap">
             <input
               type="number"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
               placeholder="0.0"
-              className="bg-transparent text-2xl outline-none flex-1"
+              className="bg-transparent text-xl sm:text-2xl outline-none flex-1 min-w-[100px] w-full sm:w-auto"
             />
             <button
               onClick={() => setIsSelectingFromToken(true)}
@@ -175,13 +208,18 @@ export default function SwapForm() {
               <img
                 src={fromToken.logoURI}
                 alt={fromToken.symbol}
-                className="w-8 h-8"
+                className="w-6 h-6 sm:w-8 sm:h-8"
               />
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="absolute z-20 left-[45%] top-[33%]">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="relative z-20 flex justify-center my-4"
+        >
           <button
             onClick={() => {
               setFromToken(toToken);
@@ -193,41 +231,72 @@ export default function SwapForm() {
           >
             <ArrowsUpDownIcon className="w-5 h-5" />
           </button>
-        </div>
+        </motion.div>
 
-        <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4">
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4"
+        >
           <div className="flex justify-between mb-2">
-            <span className="text-gray-500">To</span>
-            <span className="text-gray-500">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-gray-500 text-sm sm:text-base"
+            >
+              To
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-gray-500 text-sm sm:text-base"
+            >
               Balance: {toTokenBalance?.formatted || "0.00"}
-            </span>
+            </motion.p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2 flex-wrap">
             <input
               type="text"
               value={toAmount}
               disabled
               placeholder="0.0"
-              className="bg-transparent text-2xl outline-none flex-1"
+              className="bg-transparent text-xl sm:text-2xl outline-none flex-1 min-w-[100px] w-full sm:w-auto"
             />
             <button
               onClick={() => setIsSelectingToToken(true)}
-              className="bg-white/60 backdrop-filter-sm rounded-xl p-2 hover:bg-white  hover:scale-105 transition-transform duration-300 ease-in-out"
+              className="bg-white/60 backdrop-filter-sm rounded-xl p-2 hover:bg-white hover:scale-105 transition-transform duration-300 ease-in-out"
             >
               <img
                 src={toToken.logoURI}
                 alt={toToken.symbol}
-                className="w-8 h-8"
+                className="w-6 h-6 sm:w-8 sm:h-8"
               />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         <PriceDetails priceDetails={priceDetails} />
 
-        {error && <div className="text-red-500 mt-2">{error}</div>}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="text-red-500 mt-2"
+          >
+            {error}
+          </motion.div>
+        )}
 
-        <div className="mt-6 flex justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="mt-6 flex justify-center"
+        >
           <button
             onClick={handleSwap}
             disabled={isSwapping || !priceDetails.route}
@@ -235,8 +304,8 @@ export default function SwapForm() {
           >
             {isSwapping ? <Loader2 className="animate-spin" /> : "Swap"}
           </button>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }

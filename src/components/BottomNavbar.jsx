@@ -68,7 +68,7 @@ const BottomNavbar = () => {
             <BottomNavigationAction 
                 label="Home" 
                 icon={<img src={Home} alt="Home" className="w-6 h-6" />} 
-                style={{ color: value === 0 ? 'white' : 'black' }}
+                style={{ color: value === 0 ? 'black' : 'black' }}
                 sx={{
                     backgroundColor: value === 0 ? '#FFBF55' : 'transparent',
                     borderRadius: '12px',
@@ -77,7 +77,7 @@ const BottomNavbar = () => {
             <BottomNavigationAction 
                 label="Swap" 
                 icon={<img src={Swap} alt="Swap" className="w-6 h-6" />} 
-                style={{ color: value === 1 ? 'white' : 'black' }}
+                style={{ color: value === 1 ? 'black' : 'black' }}
                 sx={{
                     backgroundColor: value === 1 ? '#FFBF55' : 'transparent',
                     borderRadius: '12px',
@@ -86,7 +86,7 @@ const BottomNavbar = () => {
             <BottomNavigationAction 
                 label="Mint" 
                 icon={<img src={Mint} alt="Mint" className="w-6 h-6" />} 
-                style={{ color: value === 2 ? 'white' : 'black' }}
+                style={{ color: value === 2 ? 'black' : 'black' }}
                 sx={{
                     backgroundColor: value === 2 ? '#FFBF55' : 'transparent',
                     borderRadius: '12px',
@@ -95,7 +95,7 @@ const BottomNavbar = () => {
             <BottomNavigationAction 
                 label="Stake" 
                 icon={<img src={Stake} alt="Stake" className="w-6 h-6" />} 
-                style={{ color: value === 3 ? 'white' : 'black' }}
+                style={{ color: value === 3 ? 'black' : 'black' }}
                 sx={{
                     backgroundColor: value === 3 ? '#FFBF55' : 'transparent',
                     borderRadius: '12px',
@@ -104,7 +104,7 @@ const BottomNavbar = () => {
             <BottomNavigationAction 
                 label="Liquidity" 
                 icon={<img src={Liquidity} alt="Liquidity" className="w-6 h-6" />} 
-                style={{ color: value === 4 ? 'white' : 'black' }}
+                style={{ color: value === 4 ? 'black' : 'black' }}
                 sx={{
                     backgroundColor: value === 4 ? '#FFBF55' : 'transparent',
                     borderRadius: '12px',
