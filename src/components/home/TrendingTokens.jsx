@@ -1,93 +1,19 @@
-import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import useDragScroll from "../../hooks/useDragScroll";
 import { getTokenPrices } from "../../hooks/getTokenPrices";
 
 const TrendingTokens = () => {
   const { tokenData, loading, error } = getTokenPrices();
-  const scrollContainerRef = useRef(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
-  const velocity = useRef(0);
-  let animationFrame;
-  const [isDraggingState, setIsDraggingState] = useState(false); // Stato per controllare se è in corso il drag
-
-  const handleMouseDown = (e) => {
-    const container = scrollContainerRef.current;
-    isDragging.current = true;
-    startX.current = e.pageX - container.offsetLeft;
-    scrollLeft.current = container.scrollLeft;
-    velocity.current = 0;
-    container.style.scrollBehavior = "auto";
-    setIsDraggingState(true); // Imposta lo stato a true quando inizia il drag
-  };
-
-  const handleTouchStart = (e) => {
-    const container = scrollContainerRef.current;
-    isDragging.current = true;
-    startX.current = e.touches[0].pageX - container.offsetLeft;
-    scrollLeft.current = container.scrollLeft;
-    velocity.current = 0;
-    container.style.scrollBehavior = "auto";
-    setIsDraggingState(true); // Imposta lo stato a true quando inizia il drag
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging.current) return;
-
-    const container = scrollContainerRef.current;
-    e.preventDefault();
-    const x = e.pageX - container.offsetLeft;
-    const delta = x - startX.current;
-
-    velocity.current = delta * 0.2; // Imposta la velocità basata sul movimento
-    container.scrollLeft = scrollLeft.current - delta;
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging.current) return;
-
-    const container = scrollContainerRef.current;
-    e.preventDefault();
-    const x = e.touches[0].pageX - container.offsetLeft;
-    const delta = x - startX.current;
-
-    velocity.current = delta * 0.2; // Imposta la velocità basata sul movimento
-    container.scrollLeft = scrollLeft.current - delta;
-  };
-
-  const handleMouseUpOrLeave = () => {
-    if (!isDragging.current) return;
-
-    isDragging.current = false;
-    setIsDraggingState(false); // Imposta lo stato a false quando finisce il drag
-    addSmoothScrolling();
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDragging.current) return;
-
-    isDragging.current = false;
-    setIsDraggingState(false); // Imposta lo stato a false quando finisce il drag
-    addSmoothScrolling();
-  };
-
-  const addSmoothScrolling = () => {
-    const container = scrollContainerRef.current;
-
-    const smoothScroll = () => {
-      velocity.current *= 0.95; // Riduce gradualmente la velocità
-      container.scrollLeft -= velocity.current;
-
-      if (Math.abs(velocity.current) > 0.5) {
-        animationFrame = requestAnimationFrame(smoothScroll);
-      } else {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-
-    smoothScroll();
-  };
+  const {
+    scrollContainerRef,
+    isDraggingState,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUpOrLeave,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+  } = useDragScroll();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

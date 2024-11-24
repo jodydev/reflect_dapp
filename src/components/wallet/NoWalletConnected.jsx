@@ -5,7 +5,7 @@ import ConnectWalletButton from "./ConnectWalletButton";
 export default function NoWalletConnected() {
   return (
     <motion.div
-      className="w-full bg-white/30 backdrop-blur-sm relative z-10 flex flex-col items-center justify-center rounded-3xl p-8 shadow-sm space-y-6"
+      className="mb-20 md:mb-0 w-full bg-white/30 backdrop-blur-sm relative z-10 flex flex-col items-center justify-center rounded-3xl p-8 shadow-lg space-y-6"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}

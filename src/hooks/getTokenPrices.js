@@ -7,13 +7,30 @@ export const getTokenPrices = () => {
   const [error, setError] = useState(null);
 
   const fetchTokenPrices = async () => {
-    const url =
-      "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum,bitcoin,tether,binancecoin,cardano,solana,polkadot,ltc,dogecoin";
-
+    const cryptoIds = [
+      "ethereum",
+      "bitcoin",
+      "tether",
+      "binancecoin",
+      "cardano",
+      "solana",
+      "polkadot",
+      "litecoin",
+      "dogecoin",
+      "ripple",
+      "shiba-inu",
+      "uniswap",
+      "chainlink",
+      "stellar",
+      "avalanche-2",
+      "monero",
+      "tron",
+    ];
+    
+    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${cryptoIds.join(",")}`;
+    
     try {
       const response = await axios.get(url);
-      console.log("Token prices:", response.data);
-      // Salva i dati in localStorage
       localStorage.setItem("tokenData", JSON.stringify(response.data));
       setTokenData(response.data);
       setLoading(false);

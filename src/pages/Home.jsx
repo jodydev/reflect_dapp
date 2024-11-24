@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import AccountBalance from "../components/AccountBalance";
 import StatCards from "../components/home/StatCards";
-import TreadingCards from "../components/home/TreadingCards";
+import TrendingTokens from "../components/home/TrendingTokens";
 import NewsCard from "../components/home/NewsCard";
 import Charts from "../components/home/Charts";
 
@@ -32,7 +32,7 @@ const Home = () => {
           </div>
         </div>
 
-        <TreadingCards />
+        <TrendingTokens />
       </div>
     </div>
   );

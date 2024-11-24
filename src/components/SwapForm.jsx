@@ -134,9 +134,8 @@ export default function SwapForm() {
   };
 
   return (
-    <div className="w-2/3 max-w-xl mx-auto">
-      <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-      
+    <div className="w-full max-w-2xl mx-auto px-0 md:px-6 lg:px-8">
+      <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl">
         <SlippageSelector resetForm={resetForm} />
 
         <TokenSelectModal
@@ -155,18 +154,24 @@ export default function SwapForm() {
 
         <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4">
           <div className="flex justify-between mb-2">
-            <span className="text-gray-500">From</span>
-            <span className="text-gray-500">
-              Balance: {fromTokenBalance?.formatted || "0.00"}
+            <span className="text-gray-500 text-sm sm:text-base">From</span>
+            <span className="text-gray-500 text-sm sm:text-base">
+              Balance:{" "}
+              {fromTokenBalance
+                ? ethers.formatUnits(
+                    fromTokenBalance.value,
+                    fromTokenBalance.decimals
+                  )
+                : "0.00"}
             </span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2 flex-wrap">
             <input
               type="number"
               value={fromAmount}
               onChange={(e) => setFromAmount(e.target.value)}
               placeholder="0.0"
-              className="bg-transparent text-2xl outline-none flex-1"
+              className="bg-transparent text-xl sm:text-2xl outline-none flex-1 min-w-[100px] w-full sm:w-auto"
             />
             <button
               onClick={() => setIsSelectingFromToken(true)}
@@ -175,13 +180,13 @@ export default function SwapForm() {
               <img
                 src={fromToken.logoURI}
                 alt={fromToken.symbol}
-                className="w-8 h-8"
+                className="w-6 h-6 sm:w-8 sm:h-8"
               />
             </button>
           </div>
         </div>
 
-        <div className="absolute z-20 left-[45%] top-[33%]">
+        <div className="relative z-20 flex justify-center my-4">
           <button
             onClick={() => {
               setFromToken(toToken);
@@ -197,27 +202,27 @@ export default function SwapForm() {
 
         <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl mb-4">
           <div className="flex justify-between mb-2">
-            <span className="text-gray-500">To</span>
-            <span className="text-gray-500">
+            <span className="text-gray-500 text-sm sm:text-base">To</span>
+            <span className="text-gray-500 text-sm sm:text-base">
               Balance: {toTokenBalance?.formatted || "0.00"}
             </span>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2 flex-wrap">
             <input
               type="text"
               value={toAmount}
               disabled
               placeholder="0.0"
-              className="bg-transparent text-2xl outline-none flex-1"
+              className="bg-transparent text-xl sm:text-2xl outline-none flex-1 min-w-[100px] w-full sm:w-auto"
             />
             <button
               onClick={() => setIsSelectingToToken(true)}
-              className="bg-white/60 backdrop-filter-sm rounded-xl p-2 hover:bg-white  hover:scale-105 transition-transform duration-300 ease-in-out"
+              className="bg-white/60 backdrop-filter-sm rounded-xl p-2 hover:bg-white hover:scale-105 transition-transform duration-300 ease-in-out"
             >
               <img
                 src={toToken.logoURI}
                 alt={toToken.symbol}
-                className="w-8 h-8"
+                className="w-6 h-6 sm:w-8 sm:h-8"
               />
             </button>
           </div>

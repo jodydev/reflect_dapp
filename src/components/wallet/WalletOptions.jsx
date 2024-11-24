@@ -5,7 +5,7 @@ import { X, Wallet } from "lucide-react";
 import walletLogos from "../../utils/walletLogos";
 import { ShieldCheck, Lock } from "lucide-react";
 
-export default function WalletOptionsModal({ isHeaderButton }) {
+export default function WalletOptionsModal() {
   const { connectors, connect } = useConnect();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const modalRef = React.useRef(null);
@@ -50,14 +50,14 @@ export default function WalletOptionsModal({ isHeaderButton }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div
             ref={modalRef}
-            onMouseDown={handleMouseDown} // Aggiunge il drag scroll
+            onMouseDown={handleMouseDown} 
             className="absolute w-full max-w-md bg-white rounded-2xl shadow-2xl p-6"
             style={{
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
               maxHeight: "90vh",
-              overflow: "hidden", // Nasconde le barre di scorrimento
+              overflow: "hidden", 
             }}
           >
             {/* Close Button */}

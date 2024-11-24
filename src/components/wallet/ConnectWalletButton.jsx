@@ -11,7 +11,7 @@ export default function ConnectWalletButton() {
       ) : (
         <button
           onClick={disconnect}
-          className="py-2 px-6 bg-dark text-white rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center w-full md:w-auto"
+          className="text-nowrap py-2 px-6 bg-dark text-white rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center w-full md:w-auto"
         >
           Disconnect Wallet
         </button>

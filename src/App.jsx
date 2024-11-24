@@ -5,7 +5,6 @@ import Layout from './components/Layout';
 export default function App() {
   return (
     <Router>
-          </Routes>
       <Layout>
         <Routes>
           {routes.map(({ path, element }) => (

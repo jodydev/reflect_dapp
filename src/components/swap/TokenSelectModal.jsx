@@ -6,7 +6,7 @@ const TokenSelectModal = ({ isOpen, onClose, onSelect, selectedToken }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20 rounded-3xl">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4 sm:mx-6 md:mx-8 lg:w-96">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-bold">Select Token</h3>
           <button
