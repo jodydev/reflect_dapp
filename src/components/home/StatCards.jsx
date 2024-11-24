@@ -87,7 +87,7 @@ export default function StatCards() {
 
   return (
     <motion.div
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:p-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -96,13 +96,17 @@ export default function StatCards() {
       {cardData.map((card, index) => (
         <motion.div
           key={index}
-          className={`px-6 py-4 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-500 hover:cursor-pointer ${card.bgColor} ${card.borderColor || ""}`}
+          className={`px-6 py-4 md:py-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-500 hover:cursor-pointer ${
+            card.bgColor
+          } ${card.borderColor || ""}`}
           variants={cardVariants}
         >
           <h3 className={`mb-2 ${card.textColor}`}>{card.title}</h3>
           <div className="flex items-end gap-3">
             <span
-              className={`text-2xl font-bold ${index === 2 ? "text-white" : "text-black"}`}
+              className={`text-2xl font-bold ${
+                index === 2 ? "text-white" : "text-black"
+              }`}
             >
               {card.value}
             </span>

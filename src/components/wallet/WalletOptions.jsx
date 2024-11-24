@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
 import { useConnect } from "wagmi";
-import { X, Wallet } from "lucide-react";
+import { ShieldCheck, Lock, X, Wallet } from "lucide-react";
+import { motion } from "framer-motion";
 import walletLogos from "../../utils/walletLogos";
-import { ShieldCheck, Lock } from "lucide-react";
 
 export default function WalletOptionsModal() {
   const { connectors, connect } = useConnect();
@@ -15,30 +15,29 @@ export default function WalletOptionsModal() {
     const modal = modalRef.current;
     if (!modal) return;
 
-    let startY = event.pageY; // Coordinate iniziali
-    let scrollTop = modal.scrollTop; // Posizione corrente dello scroll
+    let startY = event.pageY;
+    let scrollTop = modal.scrollTop;
 
-    // Disabilita la selezione del testo
     document.body.style.userSelect = "none";
 
     const handleMouseMove = (moveEvent) => {
-      const deltaY = moveEvent.pageY - startY; // Differenza verticale
-      modal.scrollTop = scrollTop - deltaY; // Aggiorna la posizione dello scroll
-    };
+      const deltaY = moveEvent.pageY - startY;
+      modal.scrollTop = scrollTop - deltaY;
 
-    const handleMouseUp = () => {
-      // Rimuove il listener e ripristina la selezione del testo
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.body.style.userSelect = ""; // Ripristina la selezione
-    };
+      const handleMouseUp = () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
+        document.body.style.userSelect = "";
+      };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    };
   };
 
   return (
     <div className="w-full">
+      {/* Button to open modal */}
       <button
         onClick={() => setModalIsOpen(true)}
         className="text-nowrap py-2 px-6 bg-primary text-white rounded-xl transition duration-300 ease-in-out transform hover:scale-[1.02] active:scale-95 flex items-center justify-center w-full md:w-auto"
@@ -46,18 +45,26 @@ export default function WalletOptionsModal() {
         Connect Wallet
       </button>
 
+      {/* Modal */}
       {modalIsOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ duration: 0.4 }}
             ref={modalRef}
-            onMouseDown={handleMouseDown} 
-            className="absolute w-full max-w-md bg-white rounded-2xl shadow-2xl p-6"
+            onMouseDown={handleMouseDown}
+            className="absolute md:top-[10%] md:left-[35%] 2xl:top-[25%] 2xl:left-[40%] w-full md:max-w-md 2xl:max-w-xl bg-white rounded-2xl shadow-2xl p-6"
             style={{
-              top: "50%",
-              left: "50%",
               transform: "translate(-50%, -50%)",
-              maxHeight: "90vh",
-              overflow: "hidden", 
+              overflow: "hidden",
             }}
           >
             {/* Close Button */}
@@ -69,7 +76,12 @@ export default function WalletOptionsModal() {
             </button>
 
             {/* Header */}
-            <div className="text-center pt-8 pb-6 relative z-10">
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="text-center pt-8 pb-6 relative z-10"
+            >
               <div className="flex justify-center mb-4">
                 <ShieldCheck className="w-12 h-12 text-primary" />
               </div>
@@ -79,13 +91,30 @@ export default function WalletOptionsModal() {
               <p className="text-gray-600 px-8">
                 Select a wallet to connect securely to the application
               </p>
-            </div>
+            </motion.div>
 
             {/* Wallet Grid */}
-            <div className="grid grid-cols-2 gap-4 p-6 pt-0">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1,
+                  },
+                },
+              }}
+              className="grid grid-cols-2 gap-4 p-6 pt-0"
+            >
               {connectors.map((connector) => (
-                <button
+                <motion.button
                   key={connector.uid}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
                   onClick={() => {
                     connect({ connector });
                     setModalIsOpen(false);
@@ -105,19 +134,24 @@ export default function WalletOptionsModal() {
                   <span className="text-xs text-gray-500">
                     Secure Connection
                   </span>
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
 
             {/* Footer */}
-            <div className="text-center pt-4 pb-10 flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-center pt-4 pb-10 flex items-center justify-center"
+            >
               <Lock className="w-4 h-4 mr-2 text-gray-500" />
               <p className="text-xs text-gray-600">
                 Your wallet is securely connected via WalletConnect
               </p>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
