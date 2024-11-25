@@ -1,6 +1,5 @@
-import { Wallet } from "lucide-react";
+import InjectedLogo from '../../assets/images/injected.png'
 import { motion } from "framer-motion";
-import ConnectWalletButton from "./ConnectWalletButton";
 
 export default function NoWalletConnected() {
   return (
@@ -11,11 +10,11 @@ export default function NoWalletConnected() {
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="rounded-full w-18 h-18 bg-white/60 p-4 mb-4 shadow-xl hover:scale-110 transform transition-all duration-300 ease-in-out"
+        className="rounded-full w-20 h-full bg-white/60 p-4 mb-4 shadow-xl hover:scale-110 transform transition-all duration-300 ease-in-out"
         whileHover={{ scale: 1.2 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
-        <Wallet className="w-10 h-10 text-dark" />
+        <img src={InjectedLogo} className="w-20 h-full" />
       </motion.div>
       <motion.h1
         className="text-2xl font-bold mb-3 text-gray-800 text-center"

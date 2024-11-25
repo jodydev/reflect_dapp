@@ -1,42 +1,107 @@
-import { Link, useLocation } from 'react-router-dom';
-import Home from '../assets/icons/home.png';
-import Swap from '../assets/icons/swap.png';
-import Mint from '../assets/icons/mint.png';
-import Stake from '../assets/icons/stake.png';
-import Liquidity from '../assets/icons/liquidity.png';
-import Logo from '../assets/images/logo.webp';
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { IoArrowUndo, IoArrowRedo } from "react-icons/io5";
+import { FaDiscord, FaMedium } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import Home from "../assets/icons/home.png";
+import Swap from "../assets/icons/swap.png";
+import Mint from "../assets/icons/mint.png";
+import Stake from "../assets/icons/stake.png";
+import Liquidity from "../assets/icons/liquidity.png";
+import Logo from "../assets/images/logo_black.webp";
+import Logo2 from "../assets/images/logo.webp";
 
 function Sidebar() {
   const location = useLocation();
-  
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const toggleSidebar = () => setIsExpanded((prev) => !prev);
+
   const navItems = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Swap', path: '/swap', icon: Swap },
-    { name: 'Mint', path: '/mint', icon: Mint },
-    { name: 'Stake', path: '/stake', icon: Stake },
-    { name: 'Liquidity', path: '/liquidity', icon: Liquidity },
+    { name: "Home", path: "/", icon: Home },
+    { name: "Swap", path: "/swap", icon: Swap },
+    { name: "Mint", path: "/mint", icon: Mint },
+    { name: "Stake", path: "/stake", icon: Stake },
+    { name: "Liquidity", path: "/liquidity", icon: Liquidity },
   ];
 
   return (
-    <div className="w-20 bg-trasparent shadow-md">
+    <div
+      className={`relative bg-transparent shadow-md h-screen transition-all ease-in-out ${
+        isExpanded ? "w-48" : "w-20"
+      }`}
+    >
       <div className="flex flex-col items-center py-8 space-y-8">
+        {/* Logo */}
         <div className="mb-8">
-          <img src={Logo} alt="Logo" className="w-6" />
+          <img
+            src={isExpanded ? Logo : Logo2}
+            alt="Logo"
+            className={`${
+              isExpanded ? "w-40" : "w-8"
+            } transition-all ease-in-out`}
+          />
         </div>
-        
+
+        {/* Navigazione */}
         {navItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
-            className={`p-3 rounded-xl transition-colors ${
+            className={`flex items-center space-x-4 p-3 rounded-xl transition-all ease-in-out ${
               location.pathname === item.path
-                ? 'bg-primary text-white'
-                : 'text-gray-500 hover:bg-gray-100'
-            }`}
+                ? "bg-primary text-white"
+                : "text-gray-500 hover:bg-gray-100"
+            }
+            ${isExpanded ? "w-[80%]" : ""}`}
           >
-            <img src={item.icon} className="w-4" />
+            {/* Icona */}
+            <img src={item.icon} className="w-5" />
+            {/* Testo visibile solo se espansa */}
+            {isExpanded && (
+              <span className="text-sm font-bold text-dark">
+                {item.name}
+              </span>
+            )}
           </Link>
         ))}
+      </div>
+
+      {/* Pulsante per espandere/restringere */}
+      <button
+        onClick={toggleSidebar}
+        className="absolute top-24 -right-11 transform -translate-x-1/2 bg-white/60 rounded-full px-3 py-2 hover:bg-white transition-all"
+      >
+        {isExpanded ? (
+          <IoArrowUndo className="text-xl" />
+        ) : (
+          <IoArrowRedo className="text-xl" />
+        )}
+      </button>
+
+      {/* Sezione social in fondo alla sidebar */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div
+          className={isExpanded ? "flex flex-row  space-x-4" : "flex flex-col space-y-4"}
+        >
+          <a
+            href="https://discord.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaDiscord className="text-4xl text-dark shadow-sm hover:scale-110 translate-y-1 transition bg-primary rounded-full p-2" />
+          </a>
+          <a
+            href="https://medium.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaMedium className="text-4xl text-dark shadow-sm hover:scale-110 translate-y-1 transition bg-primary rounded-full p-2" />
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+            <FaXTwitter className="text-4xl text-dark shadow-sm hover:scale-110 translate-y-1 transition bg-primary rounded-full p-2" />
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -126,13 +126,12 @@ export default function WalletOptionsModal() {
                   <img
                     src={walletLogos[connector.name] || Wallet}
                     alt={`${connector.name} logo`}
-                    className="w-12 h-12 mb-3 object-contain drop-shadow-md"
+                    className="w-20 h-full mb-3 object-contain drop-shadow-md"
                   />
                   <span className="text-sm font-semibold text-gray-800 mb-1">
                     {connector.name}
                   </span>
                   <span className="text-xs text-gray-500">
-                    Secure Connection
                   </span>
                 </motion.button>
               ))}
