@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
-import { Loader2 } from "lucide-react";
+import { ArrowsUpDownIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { Loader2, Settings } from "lucide-react";
 import { useAccount, useBalance, useContractWrite } from "wagmi";
 import { ethers } from "ethers";
 import { motion } from "framer-motion";
@@ -12,7 +12,7 @@ import SlippageSelector from "./swap/SlippageSelector";
 import PriceDetails from "./swap/PriceDetails";
 
 const UNISWAP_ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
-const UNISWAP_ROUTER_ABI = []; // Inserisci l'ABI del router Uniswap
+const UNISWAP_ROUTER_ABI = [];
 
 export default function SwapForm() {
   const [fromToken, setFromToken] = useState(tokens[0]);
@@ -22,6 +22,8 @@ export default function SwapForm() {
   const [isSelectingFromToken, setIsSelectingFromToken] = useState(false);
   const [isSelectingToToken, setIsSelectingToToken] = useState(false);
   const [slippage, setSlippage] = useState(10);
+  const [error, setError] = useState("");
+  const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const [priceDetails, setPriceDetails] = useState({
     price: null,
     minReceived: null,
@@ -29,7 +31,6 @@ export default function SwapForm() {
     route: null,
     isLoading: false,
   });
-  const [error, setError] = useState("");
 
   const { address } = useAccount();
   const { data: fromTokenBalance } = useBalance({
@@ -54,7 +55,7 @@ export default function SwapForm() {
           ethers.parseUnits(priceDetails.minReceived || "0", toToken.decimals),
           priceDetails.route,
           address,
-          Math.floor(Date.now() / 1000) + 1800, // 30-minute deadline
+          Math.floor(Date.now() / 1000) + 1800,
         ]
       : undefined,
     enabled: Boolean(priceDetails.route && fromAmount && toAmount),
@@ -133,6 +134,10 @@ export default function SwapForm() {
     setError("");
   };
 
+  const openModalSettings = () => {
+    setOpenSettingsModal(true);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -147,7 +152,39 @@ export default function SwapForm() {
         transition={{ duration: 0.3 }}
         className="bg-white/40 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl"
       >
-        <SlippageSelector resetForm={resetForm} />
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-between items-center mb-6"
+        >
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="hidden md:block text-2xl font-bold"
+          >
+            Swap Tokens
+          </motion.h2>
+          <div className="relative flex flex-row space-x-6 md:space-x-2">
+            <button
+              onClick={resetForm}
+              className="text-gray-500 hover:text-primary p-2 rounded-lg hover:bg-white/20 transition duration-300 ease-in-out transform hover:scale-110"
+              title="Reset Form"
+            >
+              <ArrowPathIcon className="w-6 h-6" />
+            </button>
+            {/* //todo [Da capire se mantere modale o meno modale per i settings] */}
+            {/* <button
+              onClick={openModalSettings}
+              className="text-gray-500 hover:text-primary p-2 rounded-lg hover:bg-white/20 transition duration-300 ease-in-out transform hover:scale-110"
+            >
+              <Settings className="w-6 h-6" />
+            </button> */}
+
+            <SlippageSelector />
+          </div>
+        </motion.div>
 
         <TokenSelectModal
           isOpen={isSelectingFromToken}
@@ -218,7 +255,7 @@ export default function SwapForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="relative z-20 flex justify-center my-4"
+          className="relative z-20 flex justify-center"
         >
           <button
             onClick={() => {
@@ -227,7 +264,7 @@ export default function SwapForm() {
               setFromAmount("");
               setToAmount("");
             }}
-            className="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-gray-50 hover:scale-105 transition-transform duration-300 ease-in-out"
+            className="absolute -top-8 w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center hover:bg-gray-50 hover:scale-105 transition-transform duration-300 ease-in-out"
           >
             <ArrowsUpDownIcon className="w-5 h-5" />
           </button>

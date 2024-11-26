@@ -39,7 +39,7 @@ function Sidebar() {
             alt="Logo"
             className={`${
               isExpanded ? "w-40" : "w-8"
-            } transition-all ease-in-out`}
+            }`}
           />
         </div>
 

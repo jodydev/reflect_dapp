@@ -9,17 +9,17 @@ export default function Swap() {
         <div className="flex flex-col lg:flex-row">
           <div className="flex flex-col lg:w-2/3">
             <div className="ms-2 mb-10">
-              <h1 className="text-5xl font-bold">
+              <h2 className="text-5xl font-bold">
                 Swap
                 <span className="text-primary">rAssets</span>
-              </h1>
+              </h2>
               <p className="mt-2">Effortlessy exchange unique assets with minimal fees.</p>
             </div>
 
             <SwapForm />
           </div>
 
-          <div className="relative flex flex-col gap-10 lg:w-1/3 items-center justify-center mt-10 lg:mt-0">
+          <div className="relative flex flex-col gap-10 lg:w-1/3 items-center justify-center mt-10 lg:mt-12">
             <AccountBalance />
           </div>
         </div>
