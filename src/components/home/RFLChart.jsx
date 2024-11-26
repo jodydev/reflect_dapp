@@ -6,17 +6,42 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { formatValue } from "../../utils/formatValue";
+
+const formatValue = (value) => `${value}%`;
+
+const transformData = (data) =>
+  data.map((item) => ({
+    ...item,
+    value: parseFloat(item.value),
+  }));
 
 const RFLChart = ({ data, height }) => {
+  const transformedData = transformData(data);
+
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={data}>
-        {/* Tooltip */}
-        <XAxis dataKey="name" tickLine={true} axisLine={true} 
-          interval="preserveStartEnd" 
-          tick={{ fill: "#000", fontSize: "12px", }}
+      <AreaChart data={transformedData}>
+        {/* Asse X */}
+        <XAxis
+          dataKey="name"
+          tickLine
+          axisLine
+          interval="preserveStartEnd"
+          tick={{
+            fill: "#000",
+            fontSize: "12px",
+          }}
         />
+
+        {/* Asse Y */}
+        <YAxis
+          tickFormatter={(value) => `${value}%`}
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: "#000", fontSize: "12px" }}
+        />
+
+        {/* Tooltip */}
         <Tooltip
           formatter={(value) => formatValue(value)}
           labelFormatter={(label) => `Timeframe: ${label}`}
@@ -38,7 +63,7 @@ const RFLChart = ({ data, height }) => {
           </linearGradient>
         </defs>
 
-        {/* Area con riempimento nero gradiente */}
+        {/* Area */}
         <Area
           type="monotone"
           dataKey="value"
@@ -52,93 +77,3 @@ const RFLChart = ({ data, height }) => {
 };
 
 export default RFLChart;
-
-// import React from "react";
-// import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-
-// const RFLChart = ({ data, dataKey, gradient, height, prefix = "", suffix = "" }) => {
-
-//   return (
-//     <div style={{ height: `${height}px`, position: "relative" }}>
-//         <ResponsiveContainer>
-//           <LineChart data={data}>
-//             <defs>
-//               <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-//                 <stop offset="0%" stopColor={gradient} stopOpacity={0.8} />
-//                 <stop offset="100%" stopColor={gradient} stopOpacity={0} />
-//               </linearGradient>
-//             </defs>
-//             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-//             <XAxis dataKey="name" />
-//             <YAxis />
-//             <Tooltip
-//               formatter={(value) => `${prefix}${value}${suffix}`}
-//               contentStyle={{
-//                 backgroundColor: "rgba(255, 255, 255, 0.8)",
-//                 backdropFilter: "blur(10px)",
-//                 border: "1px solid rgba(255, 255, 255, 0.1)",
-//                 borderRadius: "8px",
-//                 color: "#000000",
-//                 fontSize: "14px",
-//               }}
-//             />
-//             <Line
-//               type="monotone"
-//               dataKey={dataKey}
-//               stroke={`url(#chartGradient)`}
-//               strokeWidth={2}
-//               dot={false}
-//             />
-//           </LineChart>
-//         </ResponsiveContainer>
-//     </div>
-//   );
-// };
-
-// export default RFLChart;
-
-// Calcola il valore minimo e massimo nei dati
-// const minValue = Math.min(...data.map((item) => item.value));
-// const maxValue = Math.max(...data.map((item) => item.value));
-
-// data = [
-//   {
-//     name: "5m",
-//     value: 10,
-//   },
-//   {
-//     name: "1h",
-//     value: 20,
-//   },
-//   {
-//     name: "6h",
-//     value: 30,
-//   },
-//   {
-//     name: "24h",
-//     value: 40,
-//   },
-// ]
-
-{
-  /* Asse X */
-}
-{
-  /* <XAxis
-          dataKey="name"
-          tickLine={true}
-          axisLine={true}
-          interval="preserveStartEnd" 
-          tick={{ fill: "#000" }}
-        /> */
-}
-{
-  /* Asse Y configurato per gestire valori negativi */
-}
-{
-  /* <YAxis
-          domain={[minValue, maxValue]}
-          tickLine={true}
-          axisLine={true}
-        /> */
-}

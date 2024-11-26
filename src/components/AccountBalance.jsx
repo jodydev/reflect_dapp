@@ -28,33 +28,46 @@ export default function AccountBalance() {
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [refreshBalance, setRefreshBalance] = useState(false);
 
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const { address, isConnected, connector } = useAccount();
   const { data, isError, isLoading, refetch } = useBalance({
     address,
     watch: true,
   });
 
-  // const [transactions, setTransactions] = useState([]);
-  
-  // useEffect(() => {
-  //   if (isConnected && address) {
-  //     // Recupera le ultime transazioni quando l'indirizzo è connesso
-  //     fetchTransactions(address).then(setTransactions);
-  //   }
-  // }, [isConnected, address]);
+  const getTransactionHistory = async (address) => {
+    const apiKey = "7KPEXDEQ39XVBDJ89MX8PT1V3VMIHMWJCG";
+    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
 
-  // const fetchTransactions = async (address) => {
-  //   const apiKey = 'your-etherscan-api-key'; // Sostituisci con la tua chiave API di Etherscan
-  //   const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=5&sort=desc&apikey=${apiKey}`;
-    
-  //   try {
-  //     const response = await axios.get(url);
-  //     return response.data.result; // Restituisce l'array delle transazioni
-  //   } catch (error) {
-  //     console.error("Error fetching transactions", error);
-  //     return [];
-  //   }
-  // };
+    const response = await fetch(url);
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.status === "1") {
+      return data.result;
+    } else {
+      throw new Error("Errore nel recuperare le transazioni");
+    }
+  };
+
+  useEffect(() => {
+    if (address) {
+      const fetchTransactions = async () => {
+        try {
+          const txs = await getTransactionHistory(address);
+          setTransactions(txs);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      fetchTransactions();
+    }
+  }, [address]);
 
   // Imposta il nome del wallet e il logo quando il wallet è connesso
   useEffect(() => {
@@ -236,17 +249,18 @@ export default function AccountBalance() {
         </div>
       </motion.div>
 
-      {/* Transazioni recenti */}
-      {/* <motion.div
+      <motion.div
         variants={balanceVariants}
         initial="hidden"
         animate="visible"
         exit="hidden"
         className="w-full bg-white/10 rounded-2xl p-4 mt-6 backdrop-blur-sm"
       >
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Ultime Transazioni</h3>
-        <table className="w-full text-sm text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          Transazioni Recenti
+        </h3>
+        <table className="w-full text-sm text-dark">
+          <thead className="text-xs text-dark uppercase bg-white/50">
             <tr>
               <th className="px-4 py-2">Hash</th>
               <th className="px-4 py-2">Valore</th>
@@ -255,25 +269,46 @@ export default function AccountBalance() {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((tx) => (
-              <tr key={tx.hash} className="bg-white border-b">
-                <td className="px-4 py-2 truncate">
-                  <a href={`https://etherscan.io/tx/${tx.hash}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                    {tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}
-                  </a>
-                </td>
-                <td className="px-4 py-2">{tx.value / 1e18} ETH</td>
-                <td className="px-4 py-2">{new Date(tx.timeStamp * 1000).toLocaleString()}</td>
-                <td className="px-4 py-2">
-                  <span className={`text-xs font-semibold ${tx.isError === "0" ? "text-green-500" : "text-red-500"}`}>
-                    {tx.isError === "0" ? 'Success' : 'Failed'}
-                  </span>
+            {transactions.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="px-4 py-6 text-center text-dark">
+                  Nessuna transazione trovata
                 </td>
               </tr>
-            ))}
+            ) : (
+              transactions.slice(0, 5).map((tx) => (
+                <tr key={tx.hash} className="bg-white/20 border-b">
+                  <td className="px-4 py-2 truncate">
+                    <a
+                      href={`https://etherscan.io/tx/${tx.hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}
+                    </a>
+                  </td>
+                  <td className="px-4 py-2">
+                    {(tx.value / 1e18).toFixed(4)} ETH
+                  </td>
+                  <td className="px-4 py-2">
+                    {new Date(tx.timeStamp * 1000).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2">
+                    <span
+                      className={`text-xs font-semibold ${
+                        tx.isError === "0" ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {tx.isError === "0" ? "Successo" : "Fallito"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-      </motion.div> */}
+      </motion.div>
     </motion.div>
   );
 }
