@@ -7,25 +7,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const formatValue = (value) => `${value}%`;
-
-const transformData = (data) =>
-  data.map((item) => ({
-    ...item,
-    value: parseFloat(item.value),
-  }));
-
 const RFLChart = ({ data, height }) => {
-  const transformedData = transformData(data);
-
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={transformedData}>
-        {/* Asse X */}
+      <AreaChart data={data}>
+        {/* X-Axis */}
         <XAxis
           dataKey="name"
-          tickLine
-          axisLine
+          tickLine={true}
+          axisLine={true}
           interval="preserveStartEnd"
           tick={{
             fill: "#000",
@@ -33,24 +23,24 @@ const RFLChart = ({ data, height }) => {
           }}
         />
 
-        {/* Asse Y */}
+        {/* Y-Axis con percentuali */}
         <YAxis
-          tickFormatter={(value) => `${value}%`}
-          axisLine={false}
-          tickLine={false}
+          tickFormatter={(value) => `${value.toFixed(0)}%`}
           tick={{ fill: "#000", fontSize: "12px" }}
+          axisLine={true}
+          tickLine={true}
         />
 
-        {/* Tooltip */}
+        {/* Tooltip con percentuali */}
         <Tooltip
-          formatter={(value) => formatValue(value)}
+          formatter={(value) => `${value.toFixed(0)}%`}
           labelFormatter={(label) => `Timeframe: ${label}`}
           contentStyle={{
             backgroundColor: "rgba(255, 255, 255, 0.8)",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(255, 255, 255, 0.1)",
             borderRadius: "8px",
-            color: "#000000",
+            color: "#000",
             fontSize: "14px",
           }}
         />
@@ -61,14 +51,27 @@ const RFLChart = ({ data, height }) => {
             <stop offset="0%" stopColor="#000000" stopOpacity={0.6} />
             <stop offset="100%" stopColor="#000000" stopOpacity={0} />
           </linearGradient>
+          <linearGradient id="orange-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FF9900" stopOpacity={0.6} />
+            <stop offset="100%" stopColor="#FF9900" stopOpacity={0} />
+          </linearGradient>
         </defs>
 
-        {/* Area */}
+        {/* Area principale */}
         <Area
           type="monotone"
           dataKey="value"
           stroke="#FF9900"
           fill="url(#black-gradient)"
+          strokeWidth={2}
+        />
+
+        {/* Area per il volume */}
+        <Area
+          type="monotone"
+          dataKey="volume"
+          stroke="#0000FF"
+          fill="url(#orange-gradient)"
           strokeWidth={2}
         />
       </AreaChart>
@@ -77,3 +80,95 @@ const RFLChart = ({ data, height }) => {
 };
 
 export default RFLChart;
+
+
+
+// import React from "react";
+// import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+
+// const RFLChart = ({ data, dataKey, gradient, height, prefix = "", suffix = "" }) => {
+
+//   return (
+//     <div style={{ height: `${height}px`, position: "relative" }}>
+//         <ResponsiveContainer>
+//           <LineChart data={data}>
+//             <defs>
+//               <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+//                 <stop offset="0%" stopColor={gradient} stopOpacity={0.8} />
+//                 <stop offset="100%" stopColor={gradient} stopOpacity={0} />
+//               </linearGradient>
+//             </defs>
+//             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+//             <XAxis dataKey="name" />
+//             <YAxis />
+//             <Tooltip
+//               formatter={(value) => `${prefix}${value}${suffix}`}
+//               contentStyle={{
+//                 backgroundColor: "rgba(255, 255, 255, 0.8)",
+//                 backdropFilter: "blur(10px)",
+//                 border: "1px solid rgba(255, 255, 255, 0.1)",
+//                 borderRadius: "8px",
+//                 color: "#000000",
+//                 fontSize: "14px",
+//               }}
+//             />
+//             <Line
+//               type="monotone"
+//               dataKey={dataKey}
+//               stroke={`url(#chartGradient)`}
+//               strokeWidth={2}
+//               dot={false}
+//             />
+//           </LineChart>
+//         </ResponsiveContainer>
+//     </div>
+//   );
+// };
+
+// export default RFLChart;
+
+// Calcola il valore minimo e massimo nei dati
+// const minValue = Math.min(...data.map((item) => item.value));
+// const maxValue = Math.max(...data.map((item) => item.value));
+
+// data = [
+//   {
+//     name: "5m",
+//     value: 10,
+//   },
+//   {
+//     name: "1h",
+//     value: 20,
+//   },
+//   {
+//     name: "6h",
+//     value: 30,
+//   },
+//   {
+//     name: "24h",
+//     value: 40,
+//   },
+// ]
+
+{
+  /* Asse X */
+}
+{
+  /* <XAxis
+          dataKey="name"
+          tickLine={true}
+          axisLine={true}
+          interval="preserveStartEnd" 
+          tick={{ fill: "#000" }}
+        /> */
+}
+{
+  /* Asse Y configurato per gestire valori negativi */
+}
+{
+  /* <YAxis
+          domain={[minValue, maxValue]}
+          tickLine={true}
+          axisLine={true}
+        /> */
+}
