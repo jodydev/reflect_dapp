@@ -14,12 +14,6 @@ const Home = () => {
       <div className="w-full">
         <div className="flex flex-col lg:flex-row lg:space-x-10 mb-10">
           <div className="flex flex-col lg:w-2/3 space-y-8">
-            {/* <h2 className="text-4xl font-bold mb-8 ms-2">
-              Create and trade{" "}
-              <span className="text-primary">crypto assets</span>
-            </h2>
-             */}
-
             <StatCards />
 
             <Charts />
