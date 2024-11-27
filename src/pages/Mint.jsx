@@ -11,7 +11,7 @@ export default function Mint() {
             <div className="ms-2 mb-12">
               <h2 className="text-5xl font-bold">
                 Mint
-                <span className="text-primary">rAssets</span>
+                <span className="text-primary"> rAssets</span>
               </h2>
               <p className="mt-2">Effortlessy exchange unique assets with minimal fees.</p>
             </div>

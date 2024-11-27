@@ -56,15 +56,6 @@ const Charts = () => {
     },
   };
 
-  const chartVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
-
   return (
     <motion.div
       className="w-full space-y-6"
@@ -76,7 +67,10 @@ const Charts = () => {
       {/* Main Chart */}
       <motion.div
         className="p-6 bg-white/20 backdrop-blur-sm rounded-3xl"
-        variants={chartVariants}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        whileHover={{ scale: 1.01 }}
       >
         <ChartTitle
           title="RFL"
@@ -95,8 +89,11 @@ const Charts = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Volume Chart */}
         <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.01 }}
           className="p-6 bg-white/20 backdrop-blur-sm rounded-3xl"
-          variants={chartVariants}
         >
           <ChartTitle
             title="Volume"
@@ -115,7 +112,10 @@ const Charts = () => {
         {/* Transactions Chart */}
         <motion.div
           className="p-6 bg-white/20 backdrop-blur-sm rounded-3xl"
-          variants={chartVariants}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.01 }}
         >
           <ChartTitle
             title="Transactions"

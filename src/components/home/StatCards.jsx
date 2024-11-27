@@ -87,7 +87,7 @@ export default function StatCards() {
 
   return (
     <motion.div
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:p-4"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -96,21 +96,27 @@ export default function StatCards() {
       {cardData.map((card, index) => (
         <motion.div
           key={index}
-          className={`px-6 py-4 md:py-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-500 hover:cursor-pointer ${
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.03 }}
+          className={`px-6 py-4 md:py-6 rounded-3xl shadow-lg hover:cursor-pointer ${
             card.bgColor
           } ${card.borderColor || ""}`}
           variants={cardVariants}
         >
-          <h3 className={`mb-2 ${card.textColor}`}>{card.title}</h3>
+          <h3 className={`mb-2 2xl:text-xl ${card.textColor}`}>{card.title}</h3>
           <div className="flex items-end gap-3">
             <span
-              className={`text-2xl font-bold ${
+              className={`text-2xl 2xl:text-4xl font-bold ${
                 index === 2 ? "text-white" : "text-black"
               }`}
             >
               {card.value}
             </span>
-            <span className={`${card.valueColor} mb-1`}>{card.change}</span>
+            <span className={`${card.valueColor} mb-1 2xl:text-lg`}>
+              {card.change && (parseFloat(card.change) > 0 ? `+${card.change}` : card.change)}
+            </span>
           </div>
         </motion.div>
       ))}

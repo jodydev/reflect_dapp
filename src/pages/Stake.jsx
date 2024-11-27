@@ -1,5 +1,5 @@
 import AccountBalance from "../components/AccountBalance";
-import StakeForm from "../components/StakeForm";
+import StakeForm from "../components/stake/StakeForm";
 import ConnectWalletButton from "../components/wallet/ConnectWalletButton";
 
 export default function Stake() {
@@ -10,8 +10,8 @@ export default function Stake() {
           <div className="flex flex-col lg:w-2/3">
             <div className="ms-2 mb-12">
               <h2 className="text-5xl font-bold">
-                Swap
-                <span className="text-primary">rAssets</span>
+                Stake
+                <span className="text-primary"> rAssets</span>
               </h2>
               <p className="mt-2">Effortlessy exchange unique assets with minimal fees.</p>
             </div>

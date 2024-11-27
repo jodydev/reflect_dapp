@@ -9,7 +9,7 @@ import {
 import { useAccount, useBalance } from "wagmi";
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import useDragScroll from "../hooks/useDragScroll";
 
 import NoWalletConnected from "./wallet/NoWalletConnected";
 import LoadingWallet from "./wallet/LoadingWallet";
@@ -38,9 +38,19 @@ export default function AccountBalance() {
     watch: true,
   });
 
+  const {
+    scrollContainerRef,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUpOrLeave,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+  } = useDragScroll();
+
   const getTransactionHistory = async (address) => {
     const apiKey = "7KPEXDEQ39XVBDJ89MX8PT1V3VMIHMWJCG";
-    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
+    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=0xA0Cf798816D4b9b9866b5330EEa46a18382f251e&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
 
     const response = await fetch(url);
     const data = await response.json();
@@ -178,8 +188,11 @@ export default function AccountBalance() {
           )}
           <div>
             <h2 className="text-xl font-bold text-gray-800">{walletName}</h2>
+            
             <div className="flex items-center text-sm text-gray-600">
-              {address.slice(0, 6)}...{address.slice(-4)}
+              <span className="text-sm text-gray-600">
+                {address.slice(0, 6)}...{address.slice(-4)}
+              </span>
               <button
                 onClick={copyAddressToClipboard}
                 className="ml-2 bg-white bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-full p-1 transition duration-300 ease-in-out hover:scale-105 hover:cursor-pointer"
@@ -211,8 +224,10 @@ export default function AccountBalance() {
         <div className="flex items-center space-x-3">
           <Wallet className="w-6 h-6 text-dark" />
           <div>
-            <span className="text-xs text-gray-500 block">Wallet Address</span>
-            <span className="text-sm font-medium truncate max-w-[150px]">
+            <span className="text-xs 2xl:text-base text-gray-500 block">
+              Wallet Address
+            </span>
+            <span className="text-sm  2xl:text-base font-medium truncate max-w-[150px]">
               {address.slice(0, 6)}...{address.slice(-4)}
             </span>
           </div>
@@ -221,16 +236,20 @@ export default function AccountBalance() {
         <div className="flex items-center space-x-3">
           <Network className="w-6 h-6 text-dark" />
           <div>
-            <span className="text-xs text-gray-500 block">Network</span>
-            <span className="text-sm font-medium">Ethereum</span>
+            <span className="text-xs 2xl:text-base text-gray-500 block">
+              Network
+            </span>
+            <span className="text-sm 2xl:text-base font-medium">Ethereum</span>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
           <PiggyBank className="w-6 h-6 text-dark" />
           <div>
-            <span className="text-xs text-gray-500 block">Total Balance</span>
-            <span className="text-lg font-bold text-gray-800">
+            <span className="text-xs 2xl:text-base text-gray-500 block">
+              Total Balance
+            </span>
+            <span className="text-lg 2xl:text-xl font-bold text-gray-800">
               {totalBalance}
             </span>
           </div>
@@ -239,10 +258,10 @@ export default function AccountBalance() {
         <div className="flex items-center space-x-3">
           <Coins className="w-6 h-6 text-dark" />
           <div>
-            <span className="text-xs text-gray-500 block">
+            <span className="text-xs 2xl:text-base text-gray-500 block">
               Available Balance
             </span>
-            <span className="text-lg font-bold text-gray-800">
+            <span className="text-lg 2xl:text-xl font-bold text-gray-800">
               {availableBalance}
             </span>
           </div>
@@ -257,57 +276,73 @@ export default function AccountBalance() {
         className="w-full bg-white/10 rounded-2xl p-4 mt-6 backdrop-blur-sm"
       >
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          Transazioni Recenti
+          Recent Transactions
         </h3>
-        <table className="w-full text-sm text-dark">
-          <thead className="text-xs text-dark uppercase bg-white/50">
-            <tr>
-              <th className="px-4 py-2">Hash</th>
-              <th className="px-4 py-2">Valore</th>
-              <th className="px-4 py-2">Data</th>
-              <th className="px-4 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.length === 0 ? (
+
+        <div
+          ref={scrollContainerRef}
+          className="overflow-x-hidden cursor-grab"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <table className="w-full text-sm text-dark">
+            <thead className="text-xs text-dark uppercase bg-white/50">
               <tr>
-                <td colSpan="4" className="px-4 py-6 text-center text-dark">
-                  Nessuna transazione trovata
-                </td>
+                <th className="px-4 py-2 whitespace-nowrap">Hash</th>
+                <th className="px-4 py-2 whitespace-nowrap">Valore</th>
+                <th className="px-4 py-2 whitespace-nowrap">Data</th>
+                <th className="px-4 py-2 whitespace-nowrap">Status</th>
               </tr>
-            ) : (
-              transactions.slice(0, 5).map((tx) => (
-                <tr key={tx.hash} className="bg-white/20 border-b">
-                  <td className="px-4 py-2 truncate">
-                    <a
-                      href={`https://etherscan.io/tx/${tx.hash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      {tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}
-                    </a>
-                  </td>
-                  <td className="px-4 py-2">
-                    {(tx.value / 1e18).toFixed(4)} ETH
-                  </td>
-                  <td className="px-4 py-2">
-                    {new Date(tx.timeStamp * 1000).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2">
-                    <span
-                      className={`text-xs font-semibold ${
-                        tx.isError === "0" ? "text-green-500" : "text-red-500"
-                      }`}
-                    >
-                      {tx.isError === "0" ? "Successo" : "Fallito"}
-                    </span>
+            </thead>
+            <tbody>
+              {transactions.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-4 py-6 text-center text-dark">
+                    Nessuna transazione trovata
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                transactions.slice(0, 5).map((tx) => (
+                  <tr
+                    key={tx.hash}
+                    className="bg-white/20 border-b border-white/60"
+                  >
+                    <td className="px-4 py-2 truncate">
+                      <a
+                        href={`https://etherscan.io/tx/${tx.hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline text-xs 2xl:text-base"
+                      >
+                        {tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}
+                      </a>
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-xs 2xl:text-base">
+                      {(tx.value / 1e18).toFixed(4)} ETH
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-xs 2xl:text-base">
+                      {new Date(tx.timeStamp * 1000).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`text-xs 2xl:text-base font-semibold ${
+                          tx.isError === "0" ? "text-green-500" : "text-red-500"
+                        }`}
+                      >
+                        {tx.isError === "0" ? "Successo" : "Fallito"}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </motion.div>
     </motion.div>
   );

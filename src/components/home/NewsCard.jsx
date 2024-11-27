@@ -2,29 +2,18 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 const NewsCard = () => {
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
-
   return (
     <motion.div
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ scale: 1.05 }}
       exit="hidden"
       className="relative z-10 flex flex-col h-full rounded-3xl bg-dark p-6 shadow-sm backdrop-blur-sm"
     >
       {/* Header */}
       <div className="mb-2">
-        <h3 className="text-white text-2xl font-bold">
-          Reflect latest News
-        </h3>
+        <h3 className="text-white text-2xl font-bold">Reflect latest News</h3>
       </div>
 
       {/* Meta info */}

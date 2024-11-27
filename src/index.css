@@ -56,3 +56,7 @@ body {
   border-radius: 10px;
 }
 
+.my-overflow-bar {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}

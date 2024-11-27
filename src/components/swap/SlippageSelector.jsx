@@ -5,7 +5,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { Settings } from "lucide-react";
 
 export default function SlippageSelector({ resetForm }) {
-  const [slippage, setSlippage] = useState(0.5);
+  const [slippage, setSlippage] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const slippageOptions = [1, 25, 50, 100];
@@ -25,7 +25,7 @@ export default function SlippageSelector({ resetForm }) {
       >
         Swap Tokens
       </motion.h2>
-      <div className="relative flex flex-row space-x-6 md:space-x-2">
+      <div className="relative flex flex-row space-x-6 md:space-x-4">
         <button
           onClick={resetForm}
           className="text-gray-500 hover:text-primary p-2 rounded-lg hover:bg-white/20 transition duration-300 ease-in-out transform hover:scale-110"
@@ -33,9 +33,9 @@ export default function SlippageSelector({ resetForm }) {
         >
           <ArrowPathIcon className="w-6 h-6" />
         </button>
-        <button className="text-gray-500 hover:text-primary p-2 rounded-lg hover:bg-white/20 transition duration-300 ease-in-out transform hover:scale-110">
+        {/* <button className="text-gray-500 hover:text-primary p-2 rounded-lg hover:bg-white/20 transition duration-300 ease-in-out transform hover:scale-110">
           <Settings className="w-6 h-6" />
-        </button>
+        </button> */}
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="flex items-center text-sm bg-white/60 backdrop-filter-sm px-3 py-1 rounded-lg hover:bg-white/40 transition-colors"

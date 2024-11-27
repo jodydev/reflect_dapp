@@ -8,6 +8,7 @@ export default function NoWalletConnected() {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
+      whileHover={{ scale: 1.05 }}
     >
       <motion.div
         className="rounded-full w-20 h-full bg-white/60 p-4 mb-4 shadow-xl hover:scale-110 transform transition-all duration-300 ease-in-out"

@@ -31,21 +31,21 @@ const RFLChart = ({ data, height }) => {
           tickLine={true}
         />
 
-        {/* Tooltip con percentuali */}
-        <Tooltip
-          formatter={(value) => `${value.toFixed(0)}%`}
-          labelFormatter={(label) => `Timeframe: ${label}`}
-          contentStyle={{
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            borderRadius: "8px",
-            color: "#000",
-            fontSize: "14px",
-          }}
-        />
+        /* Tooltip con percentuali */}
+          <Tooltip
+            formatter={(value) => `${value > 0 ? '+' : ''}${value.toFixed(0)}%`}
+            labelFormatter={(label) => `Timeframe: ${label}`}
+            contentStyle={{
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              borderRadius: "8px",
+              color: "#000",
+              fontSize: "14px",
+            }}
+          />
 
-        {/* Gradiente di riempimento */}
+          {/* Gradiente di riempimento */}
         <defs>
           <linearGradient id="black-gradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#000000" stopOpacity={0.6} />

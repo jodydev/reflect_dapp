@@ -6,8 +6,10 @@ import { FaXTwitter } from "react-icons/fa6";
 import Home from "../assets/icons/home.png";
 import Swap from "../assets/icons/swap.png";
 import Mint from "../assets/icons/mint.png";
+import Pool from "../assets/icons/pool.png";
 import Stake from "../assets/icons/stake.png";
-import Liquidity from "../assets/icons/liquidity.png";
+import Liquidation from "../assets/icons/liquidation.png";
+import MyReflect from "../assets/icons/my-reflect.png";
 import Logo from "../assets/images/logo_black.webp";
 import Logo2 from "../assets/images/logo.webp";
 
@@ -22,23 +24,25 @@ function Sidebar() {
     { name: "Swap", path: "/swap", icon: Swap },
     { name: "Mint", path: "/mint", icon: Mint },
     { name: "Stake", path: "/stake", icon: Stake },
-    { name: "Liquidity", path: "/liquidity", icon: Liquidity },
+    { name: "Pool", path: "/pool", icon: Pool },
+    { name: "Liquidation", path: "/liquidation", icon: Liquidation },
+    { name: "My Reflect", path: "/my-reflect", icon: MyReflect },
   ];
 
   return (
     <div
-      className={`relative bg-transparent shadow-md h-screen transition-all ease-in-out ${
+      className={`relative bg-transparent shadow-md min-h-screen transition-all ease-in-out ${
         isExpanded ? "w-48" : "w-20"
       }`}
     >
-      <div className="flex flex-col items-center py-8 space-y-8">
+      <div className="flex flex-col items-center py-10 space-y-5">
         {/* Logo */}
         <div className="mb-8">
           <img
             src={isExpanded ? Logo : Logo2}
             alt="Logo"
             className={`${
-              isExpanded ? "w-40" : "w-8"
+              isExpanded ? "w-32" : "w-8"
             }`}
           />
         </div>
@@ -50,8 +54,8 @@ function Sidebar() {
             to={item.path}
             className={`flex items-center space-x-4 p-3 rounded-xl transition-all ease-in-out ${
               location.pathname === item.path
-                ? "bg-primary text-white"
-                : "text-gray-500 hover:bg-gray-100"
+                ? "bg-primary text-white shadow-md"
+                : "text-gray-500 hover:bg-gray-200"
             }
             ${isExpanded ? "w-[80%]" : ""}`}
           >

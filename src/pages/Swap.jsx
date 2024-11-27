@@ -1,5 +1,5 @@
 import AccountBalance from "../components/AccountBalance";
-import SwapForm from "../components/SwapForm";
+import SwapForm from "../components/swap/SwapForm";
 import ConnectWalletButton from "../components/wallet/ConnectWalletButton";
 
 export default function Swap() {
@@ -11,7 +11,7 @@ export default function Swap() {
             <div className="ms-2 mb-10">
               <h2 className="text-5xl font-bold">
                 Swap
-                <span className="text-primary">rAssets</span>
+                <span className="text-primary"> rAssets</span>
               </h2>
               <p className="mt-2">Effortlessy exchange unique assets with minimal fees.</p>
             </div>
