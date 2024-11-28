@@ -9,7 +9,7 @@ export default function MyReflect() {
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="flex flex-col lg:w-2/3">
             <div className="ms-2 mb-12">
-              <h2 className="text-5xl font-bold">In sviluppo</h2>
+              <h2 className="text-5xl font-bold">In development</h2>
             </div>
           </div>
         </div>
