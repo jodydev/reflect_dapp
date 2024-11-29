@@ -10,7 +10,7 @@ contract FaucetToken is ERC20, Ownable {
 
     uint8 private _decimals;
     
-    constructor(address minter, string memory name, string memory symbol, uint8 decimals_) ERC20(name, symbol) {
+    constructor(address minter, string memory name, string memory symbol, uint8 decimals_) ERC20(name, symbol) Ownable(msg.sender){
       authorized[minter] = true;
       _decimals = decimals_;
     }

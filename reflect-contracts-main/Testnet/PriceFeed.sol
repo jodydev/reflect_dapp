@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /**
  *Submitted for verification at Arbiscan.io on 2021-08-30
 */
@@ -6,7 +8,7 @@
  *Submitted for verification at Etherscan.io on 2020-08-06
 */
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.28;
 
 
 /**
@@ -27,7 +29,7 @@ contract Owned {
     address indexed to
   );
 
-  constructor() public {
+  constructor()  {
     owner = payable(msg.sender);
   }
 
@@ -193,13 +195,13 @@ contract AggregatorProxy is AggregatorV2V3Interface, Owned {
     override
     returns (int256 answer)
   {
-    if (_roundId > MAX_ID) return 0;
+      if (_roundId > MAX_ID) return 0;
 
-    (uint16 phaseId, uint64 aggregatorRoundId) = parseIds(_roundId);
-    AggregatorV2V3Interface aggregator = phaseAggregators[phaseId];
-    if (address(aggregator) == address(0)) return 0;
+      (uint16 phaseIdX, uint64 aggregatorRoundId) = parseIds(_roundId);
+      AggregatorV2V3Interface aggregatorX = phaseAggregators[phaseIdX];
+      if (address(aggregatorX) == address(0)) return 0;
 
-    return aggregator.getAnswer(aggregatorRoundId);
+    return aggregatorX.getAnswer(aggregatorRoundId);
   }
 
   /**
@@ -220,11 +222,11 @@ contract AggregatorProxy is AggregatorV2V3Interface, Owned {
   {
     if (_roundId > MAX_ID) return 0;
 
-    (uint16 phaseId, uint64 aggregatorRoundId) = parseIds(_roundId);
-    AggregatorV2V3Interface aggregator = phaseAggregators[phaseId];
-    if (address(aggregator) == address(0)) return 0;
+    (uint16 phaseIdX, uint64 aggregatorRoundId) = parseIds(_roundId);
+    AggregatorV2V3Interface aggregatorX = phaseAggregators[phaseIdX];
+    if (address(aggregatorX) == address(0)) return 0;
 
-    return aggregator.getTimestamp(aggregatorRoundId);
+    return aggregatorX.getTimestamp(aggregatorRoundId);
   }
 
   /**
@@ -279,24 +281,24 @@ contract AggregatorProxy is AggregatorV2V3Interface, Owned {
     virtual
     override
     returns (
-      uint80 roundId,
-      int256 answer,
-      uint256 startedAt,
-      uint256 updatedAt,
-      uint80 answeredInRound
+      uint80,
+      int256,
+      uint256,
+      uint256,
+      uint80
     )
-  {
-    (uint16 phaseId, uint64 aggregatorRoundId) = parseIds(_roundId);
+    {
+      (uint16 phaseId_, uint64 aggregatorRoundId) = parseIds(_roundId);
 
-    (
-      uint80 roundId,
-      int256 answer,
-      uint256 startedAt,
-      uint256 updatedAt,
-      uint80 ansIn
-    ) = phaseAggregators[phaseId].getRoundData(aggregatorRoundId);
+      (
+        uint80 roundId,
+        int256 answer,
+        uint256 startedAt,
+        uint256 updatedAt,
+        uint80 ansIn
+      ) = phaseAggregators[phaseId_].getRoundData(aggregatorRoundId);
 
-    return addPhaseIds(roundId, answer, startedAt, updatedAt, ansIn, phaseId);
+      return addPhaseIds(roundId, answer, startedAt, updatedAt, ansIn, phaseId_);
   }
 
   /**
@@ -517,8 +519,9 @@ contract AggregatorProxy is AggregatorV2V3Interface, Owned {
     uint16 _phase,
     uint64 _originalId
   )
+
     internal
-    view
+    pure
     returns (uint80)
   {
     return uint80(uint256(_phase) << PHASE_OFFSET | _originalId);
@@ -528,13 +531,13 @@ contract AggregatorProxy is AggregatorV2V3Interface, Owned {
     uint256 _roundId
   )
     internal
-    view
+    pure
     returns (uint16, uint64)
   {
-    uint16 phaseId = uint16(_roundId >> PHASE_OFFSET);
+    uint16 phaseIdX = uint16(_roundId >> PHASE_OFFSET);
     uint64 aggregatorRoundId = uint64(_roundId);
 
-    return (phaseId, aggregatorRoundId);
+    return (phaseIdX, aggregatorRoundId);
   }
 
   function addPhaseIds(
@@ -543,18 +546,18 @@ contract AggregatorProxy is AggregatorV2V3Interface, Owned {
       uint256 startedAt,
       uint256 updatedAt,
       uint80 answeredInRound,
-      uint16 phaseId
+      uint16 phaseId_
   )
     internal
-    view
+    pure
     returns (uint80, int256, uint256, uint256, uint80)
   {
     return (
-      addPhase(phaseId, uint64(roundId)),
+      addPhase(phaseId_, uint64(roundId)),
       answer,
       startedAt,
       updatedAt,
-      addPhase(phaseId, uint64(answeredInRound))
+      addPhase(phaseId_, uint64(answeredInRound))
     );
   }
 
@@ -588,7 +591,6 @@ contract EACAggregatorProxy is AggregatorProxy {
 
   constructor(
   )
-    public
     AggregatorProxy()
   {
   }

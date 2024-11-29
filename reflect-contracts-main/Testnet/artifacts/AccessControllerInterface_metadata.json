@@ -1,0 +1,70 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "hasAccess",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Testnet/PriceFeed.sol": "AccessControllerInterface"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Testnet/PriceFeed.sol": {
+			"keccak256": "0x616bd71db2f494cbae4fc9cf29d93b0783c7b8d45da1f846d4787a9cf39714c9",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://362470b9cfcab0ff1314b2e00e56eb43a3af53721a1adfc73e69f986ecac8aeb",
+				"dweb:/ipfs/QmY53NKfftFRTCKtLuCFmufJFWfkE2p5JTkZjvdU8mXds1"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.0;
+pragma solidity >=0.6.28;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -32,7 +32,7 @@ contract GrandOracle is AggregatorV3Interface, Ownable {
 
   event OracleUpdated(address token, uint80 roundId, int256 answer);
 
-  constructor(address _oracleOwner) {
+  constructor(address _oracleOwner)  Ownable(msg.sender) {
     oracleManager = _oracleOwner;
   }
 
