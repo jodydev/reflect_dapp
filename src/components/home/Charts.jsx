@@ -86,7 +86,7 @@ const Charts = () => {
         />
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Volume Chart */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}

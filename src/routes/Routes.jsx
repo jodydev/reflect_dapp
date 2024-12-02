@@ -5,9 +5,11 @@ import Stake from '../pages/Stake';
 import Pool from '../pages/Pool';
 import Liquidation from '../pages/Liquidation';
 import MyReflect from '../pages/MyReflect';
+import Login from '../pages/Login';
 
 export const routes = [
-  { path: '/', element: <Home /> },
+  { path: '/', element: <Login /> },
+  { path: '/home', element: <Home /> },
   { path: '/swap', element: <Swap /> },
   { path: '/mint', element: <Mint /> },
   { path: '/stake', element: <Stake /> },
