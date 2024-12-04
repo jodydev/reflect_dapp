@@ -18,7 +18,9 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login onLogin={handleLogin} />} />
+        <Route path="/" element={
+          isAuthenticated ? <Navigate to="/home" /> :
+          <Login onLogin={handleLogin} />} />
         <Route
           path="*"
           element={
